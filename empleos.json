@@ -58,5 +58,115 @@
         "titulo": "UGEL HUANCAYO  2 plazas | Contrato \"CAS\"",
         "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-huancayo-requiere-abogado-especialista-convivencia-escolar-convocatoria-julio-2026-86900.html",
         "archivo_web": "empleo-10.html"
+    },
+    {
+        "id_interno": 11,
+        "titulo": "PROVIAS DESCENTRALIZADO  2 plazas | Contrato \"PRACTICAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-provias-descentralizado-requiere-practicantes-convocatoria-julio-2026-87192.html",
+        "archivo_web": "empleo-11.html",
+        "ubicacion": {
+            "departamento": "Ica",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 12,
+        "titulo": "MUNICIPALIDAD DE QUISPICANCHI  18 plazas | Contrato \"728\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-quispicanchi-serenazgos-conductores-vehiculo-motorizados-convocatoria-julio-2026-87191.html",
+        "archivo_web": "empleo-12.html",
+        "ubicacion": {
+            "departamento": "Cusco",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 13,
+        "titulo": "MUNICIPALIDAD DE MAGDALENA DEL MAR  156 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-magdalena-del-mar-156-supervisor-serenos-choferes-motorizados-convocatoria-julio-2026-87190.html",
+        "archivo_web": "empleo-13.html",
+        "ubicacion": {
+            "departamento": "Lima",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 14,
+        "titulo": "MUNICIPALIDAD DE REQUE  1 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-reque-requiere-especialista-seguridad-ciudadana-convocatoria-julio-2026-87189.html",
+        "archivo_web": "empleo-14.html",
+        "ubicacion": {
+            "departamento": "Lambayeque",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 15,
+        "titulo": "MINISTERIO PÚBLICO - FISCALÍA  19 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ministerio-publico-fiscalia-asistentes-operadores-peritos-cargos-convocatoria-julio-2026-87187.html",
+        "archivo_web": "empleo-15.html",
+        "ubicacion": {
+            "departamento": "Huancavelica",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 16,
+        "titulo": "MINISTERIO PÚBLICO - FISCALÍA  27 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ministerio-publico-fiscalia-asistentes-analistas-psicologos-cargos-convocatoria-julio-2026-87188.html",
+        "archivo_web": "empleo-16.html",
+        "ubicacion": {
+            "departamento": "Amazonas",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 17,
+        "titulo": "MUNICIPALIDAD DE OCONGATE  5 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-ocongate-especialista-asistente-auxiliar-cargos-convocatoria-julio-2026-87186.html",
+        "archivo_web": "empleo-17.html",
+        "ubicacion": {
+            "departamento": "Cusco",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 18,
+        "titulo": "HOSPITAL HIPOLITO UNANUE DE TACNA  1 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-hospital-hipolito-unanue-tacna-requiere-tecnico-enfermeria-convocatoria-julio-2026-87185.html",
+        "archivo_web": "empleo-18.html",
+        "ubicacion": {
+            "departamento": "Tacna",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 19,
+        "titulo": "UGEL 3  1 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-requiere-auxiliar-administrativo-convocatoria-julio-2026-87184.html",
+        "archivo_web": "empleo-19.html",
+        "ubicacion": {
+            "departamento": "Lima",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 20,
+        "titulo": "RED DE SALUD LA CONVENCIÓN  10 plazas | Contrato \"276\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-convencion-medicos-enfermeras-obstetra-tecnico-administrativo-convocatoria-julio-2026-87183.html",
+        "archivo_web": "empleo-20.html",
+        "ubicacion": {
+            "departamento": "Cusco",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
     }
 ]
