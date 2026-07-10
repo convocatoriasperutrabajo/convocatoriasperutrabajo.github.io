@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "titulo": "UGEL CHEPÉN  1 plazas | Contrato \"276\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-chepen-requiere-secretaria-convocatoria-julio-2026-86911.html",
+        "archivo_web": "empleo-1.html"
+    },
+    {
+        "id": 2,
+        "titulo": "UGEL  BELLAVISTA  1 plazas | Contrato \"CAS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-bellavista-requiere-coordinador-innovacion-soporte-tecnologico-convocatoria-julio-2026-86910.html",
+        "archivo_web": "empleo-2.html"
+    },
+    {
+        "id": 3,
+        "titulo": "GOBIERNO REGIONAL MADRE DE DIOS  11 plazas | Contrato \"CAS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-gobierno-regional-madre-dios-abogados-asistentes-administrativo-registrador-convocatoria-julio-2026-86909.html",
+        "archivo_web": "empleo-3.html"
+    },
+    {
+        "id": 4,
+        "titulo": "PODER JUDICIAL  42 plazas | Contrato \"CAS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-poder-judicial-especialistas-asistentes-auxiliares-convocatoria-julio-2026-86908.html",
+        "archivo_web": "empleo-4.html"
+    },
+    {
+        "id": 5,
+        "titulo": "EMPSSAPAL S.A.  2 plazas | Contrato \"CONCURSO PÚBLICO\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-empssapal-requiere-gerente-comercial-coordinacion-convocatoria-julio-2026-86906.html",
+        "archivo_web": "empleo-5.html"
+    },
+    {
+        "id": 6,
+        "titulo": "RED DE SALUD TRUJILLO  1 plazas | Contrato \"LOCACIÓN DE SERVICIOS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-trujillo-requiere-planeamiento-presupuesto-convocatoria-julio-2026-86912.html",
+        "archivo_web": "empleo-6.html"
+    },
+    {
+        "id": 7,
+        "titulo": "CAJA DE PENSIONES MILITAR POLICIAL  7 plazas | Contrato \"PRACTICAS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-caja-pensiones-militar-policial-requiere-practicantes-convocatoria-julio-2026-86905.html",
+        "archivo_web": "empleo-7.html"
+    },
+    {
+        "id": 8,
+        "titulo": "JNE  125 plazas | Contrato \"Locación de servicios\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-jne-125-fiscalizadores-tecnologia-aplicada-convocatoria-elecciones-regionales-municipales-2026-86904.html",
+        "archivo_web": "empleo-8.html"
+    },
+    {
+        "id": 9,
+        "titulo": "UGEL SURCUBAMBA  6 plazas | Contrato \"CAS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-surcubamba-asistente-legal-especialista-infraestructura-pad-convocatoria-julio-2026-86903.html",
+        "archivo_web": "empleo-9.html"
+    },
+    {
+        "id": 10,
+        "titulo": "UGEL HUANCAYO  2 plazas | Contrato \"CAS\"",
+        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-huancayo-requiere-abogado-especialista-convivencia-escolar-convocatoria-julio-2026-86900.html",
+        "archivo_web": "empleo-10.html"
+    }
+]
