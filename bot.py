@@ -47,13 +47,11 @@ def publicar_en_facebook(titulo, nombre_archivo_web, depar):
         print(f"💥 Conexión fallida Facebook: {e}")
 
 def extraer_datos_geograficos(texto_bloque):
-    """Detecta de qué departamento de Perú es la oferta buscando palabras clave."""
-    dep = "Lima"  # Por defecto si no encuentra
+    dep = "Lima"
     prov = "Especificado en el enlace"
     dist = "Especificado en el enlace"
     
     texto_min = texto_bloque.lower()
-    
     departamentos_peru = [
         "amazonas", "ancash", "apurimac", "arequipa", "ayacucho", "cajamarca", 
         "callao", "cusco", "huancavelica", "huanuco", "ica", "junin", 
@@ -67,6 +65,77 @@ def extraer_datos_geograficos(texto_bloque):
             break
             
     return dep, prov, dist
+
+def generar_portada_principal(empleos):
+    """Genera automáticamente el archivo index.html organizando los empleos por departamento."""
+    print("🏠 Actualizando la portada principal (index.html)...")
+    
+    # Agrupar los empleos por departamento
+    empleos_por_dep = {}
+    for emp in empleos:
+        dep = emp.get("ubicacion", {}).get("departamento", "Lima")
+        if dep not in empleos_por_dep:
+            empleos_por_dep[dep] = []
+        empleos_por_dep[dep].append(emp)
+    
+    # Construir el contenido dinámico de los departamentos y sus enlaces
+    contenido_html = ""
+    for dep, lista_empleos in sorted(empleos_por_dep.items()):
+        contenido_html += f"""
+        <div class="dep-section">
+            <h2>📍 Región {dep}</h2>
+            <ul class="job-list">"""
+        
+        # Mostrar los últimos empleos subidos de este departamento primero
+        for emp in reversed(lista_empleos):
+            contenido_html += f"""
+                <li>
+                    <a href="{emp['archivo_web']}" class="job-link">
+                        <span class="job-title">{emp['titulo']}</span>
+                    </a>
+                </li>"""
+        contenido_html += """
+            </ul>
+        </div>"""
+
+    # Estructura completa de la página de inicio
+    html_completo = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convocatorias Perú Trabajo - Portal Oficial</title>
+    <style>
+        body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color: #333; }}
+        header {{ background-color: #0056b3; color: white; padding: 25px 20px; text-align: center; border-bottom: 4px solid #d91d1d; }}
+        header h1 {{ margin: 0; font-size: 26px; }}
+        header p {{ margin: 5px 0 0 0; font-size: 14px; opacity: 0.9; }}
+        .container {{ max-width: 900px; margin: 30px auto; padding: 0 20px; }}
+        .dep-section {{ background: white; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 20px; border-left: 5px solid #0056b3; }}
+        .dep-section h2 {{ margin-top: 0; color: #0056b3; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }}
+        .job-list {{ list-style: none; padding: 0; margin: 10px 0 0 0; }}
+        .job-list li {{ padding: 10px 0; border-bottom: 1px dashed #edf2f7; }}
+        .job-list li:last-child {{ border-bottom: none; }}
+        .job-link {{ text-decoration: none; color: #2d3748; display: block; font-size: 15px; transition: color 0.2s; }}
+        .job-link:hover {{ color: #d91d1d; }}
+        .job-title {{ font-weight: 500; }}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Convocatorias de Trabajo del Estado</h1>
+        <p>Busca de forma rápida y directa las plazas oficiales vigentes en tu región</p>
+    </header>
+    
+    <div class="container">
+        {contenido_html}
+    </div>
+</body>
+</html>"""
+
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html_completo)
+    print("✅ Portada principal actualizada correctamente.")
 
 def procesar_convocatorias():
     print("🔍 Conectando con la base de datos de convocatorias vigentes...")
@@ -92,7 +161,6 @@ def procesar_convocatorias():
                 if len(titulo) > 15 and "html" in link_detalle:
                     if link_detalle not in enlaces_existentes:
                         
-                        # Analizar el texto del bloque completo para sacar la región
                         texto_completo = bloque.get_text()
                         dep, prov, dist = extraer_datos_geograficos(texto_completo + " " + titulo)
                         
@@ -101,7 +169,6 @@ def procesar_convocatorias():
                         id_interno = len(empleos_guardados) + 1
                         nombre_archivo_html = f"empleo-{id_interno}.html"
                         
-                        # Creas tu propia web con diseño limpio
                         with open(nombre_archivo_html, "w", encoding="utf-8") as html:
                             html.write(f"""<!DOCTYPE html>
 <html lang="es">
@@ -155,7 +222,10 @@ def procesar_convocatorias():
             guardar_empleos(empleos_guardados)
             print(f"\n✅ ¡Éxito! Se generaron {nuevos_empleos_detectados} páginas web en tu repositorio.")
         else:
-            print("\n😴 No hay novedades. Todo el contenido está actualizado.")
+            print("\n😴 No hay novedades de empleos en este instante.")
+            
+        # Llamamos siempre a actualizar el index.html al finalizar, haya o no nuevos empleos
+        generar_portada_principal(empleos_guardados)
             
     except Exception as e:
         print(f"💥 Ocurrió un inconveniente: {e}")

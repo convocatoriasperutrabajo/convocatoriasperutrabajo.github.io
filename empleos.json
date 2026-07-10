@@ -168,5 +168,115 @@
             "provincia": "Especificado en el enlace",
             "distrito": "Especificado en el enlace"
         }
+    },
+    {
+        "id_interno": 21,
+        "titulo": "MUNICIPALIDAD DE SAN MIGUEL  24 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-san-miguel-operarios-recoleccion-residuos-solidos-barrido-convocatoria-julio-2026-87182.html",
+        "archivo_web": "empleo-21.html",
+        "ubicacion": {
+            "departamento": "Lima",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 22,
+        "titulo": "RED DE SALUD LA CONVENCIÓN  1 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-convencion-requiere-especialista-administrativo-convocatoria-julio-2026-87181.html",
+        "archivo_web": "empleo-22.html",
+        "ubicacion": {
+            "departamento": "Cusco",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 23,
+        "titulo": "MUNICIPALIDAD DE CACHACHI  7 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-cachachi-subgerentes-secretarios-asistentes-cargos-convocatoria-julio-2026-87180.html",
+        "archivo_web": "empleo-23.html",
+        "ubicacion": {
+            "departamento": "Cajamarca",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 24,
+        "titulo": "RED DE SALUD MELGAR  16 plazas | Contrato \"LOCACIÓN DE SERVICIOS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-melgar-servicios-digitaciones-auditoria-medica-convocatoria-julio-2026-87179.html",
+        "archivo_web": "empleo-24.html",
+        "ubicacion": {
+            "departamento": "Ica",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 25,
+        "titulo": "GOBIERNO REGIONAL PUNO  8 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-gobierno-regional-puno-especialista-administrativo-asistente-social-abogado-convocatoria-julio-2026-87178.html",
+        "archivo_web": "empleo-25.html",
+        "ubicacion": {
+            "departamento": "Puno",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 26,
+        "titulo": "MUNICIPALIDAD DE MARCONA  1 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-marcona-requiere-auxiliar-coactivo-convocatoria-julio-2026-87177.html",
+        "archivo_web": "empleo-26.html",
+        "ubicacion": {
+            "departamento": "Ica",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 27,
+        "titulo": "UNIVERSIDAD TORIBIO RODRÍGUEZ - UNTRM  2 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-universidad-toribio-rodriguez-untrm-requiere-personal-apoyo-administrativo-convocatoria-julio-2026-87176.html",
+        "archivo_web": "empleo-27.html",
+        "ubicacion": {
+            "departamento": "Amazonas",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 28,
+        "titulo": "FONCODES  1 plazas | Contrato \"728 \"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-foncodes-requiere-profesional-convocatoria-julio-2026-87175.html",
+        "archivo_web": "empleo-28.html",
+        "ubicacion": {
+            "departamento": "Lima",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 29,
+        "titulo": "D.R. TRANSPORTES TACNA  2 plazas | Contrato \"276\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-transportes-tacna-requiere-tecnico-trasporte-ingenieria-convocatoria-julio-2026-87174.html",
+        "archivo_web": "empleo-29.html",
+        "ubicacion": {
+            "departamento": "Tacna",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
+    },
+    {
+        "id_interno": 30,
+        "titulo": "MUNICIPALIDAD DE CHURCAMPA  4 plazas | Contrato \"CAS\"",
+        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-churcampa-responsables-diferentes-areas-serenazgo-convocatoria-julio-2026-87173.html",
+        "archivo_web": "empleo-30.html",
+        "ubicacion": {
+            "departamento": "Huancavelica",
+            "provincia": "Especificado en el enlace",
+            "distrito": "Especificado en el enlace"
+        }
     }
 ]
