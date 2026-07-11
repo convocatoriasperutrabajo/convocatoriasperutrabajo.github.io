@@ -1,282 +1,90 @@
 [
-    {
-        "id": 1,
-        "titulo": "UGEL CHEPÉN  1 plazas | Contrato \"276\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-chepen-requiere-secretaria-convocatoria-julio-2026-86911.html",
-        "archivo_web": "empleo-1.html"
-    },
-    {
-        "id": 2,
-        "titulo": "UGEL  BELLAVISTA  1 plazas | Contrato \"CAS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-bellavista-requiere-coordinador-innovacion-soporte-tecnologico-convocatoria-julio-2026-86910.html",
-        "archivo_web": "empleo-2.html"
-    },
-    {
-        "id": 3,
-        "titulo": "GOBIERNO REGIONAL MADRE DE DIOS  11 plazas | Contrato \"CAS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-gobierno-regional-madre-dios-abogados-asistentes-administrativo-registrador-convocatoria-julio-2026-86909.html",
-        "archivo_web": "empleo-3.html"
-    },
-    {
-        "id": 4,
-        "titulo": "PODER JUDICIAL  42 plazas | Contrato \"CAS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-poder-judicial-especialistas-asistentes-auxiliares-convocatoria-julio-2026-86908.html",
-        "archivo_web": "empleo-4.html"
-    },
-    {
-        "id": 5,
-        "titulo": "EMPSSAPAL S.A.  2 plazas | Contrato \"CONCURSO PÚBLICO\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-empssapal-requiere-gerente-comercial-coordinacion-convocatoria-julio-2026-86906.html",
-        "archivo_web": "empleo-5.html"
-    },
-    {
-        "id": 6,
-        "titulo": "RED DE SALUD TRUJILLO  1 plazas | Contrato \"LOCACIÓN DE SERVICIOS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-trujillo-requiere-planeamiento-presupuesto-convocatoria-julio-2026-86912.html",
-        "archivo_web": "empleo-6.html"
-    },
-    {
-        "id": 7,
-        "titulo": "CAJA DE PENSIONES MILITAR POLICIAL  7 plazas | Contrato \"PRACTICAS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-caja-pensiones-militar-policial-requiere-practicantes-convocatoria-julio-2026-86905.html",
-        "archivo_web": "empleo-7.html"
-    },
-    {
-        "id": 8,
-        "titulo": "JNE  125 plazas | Contrato \"Locación de servicios\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-jne-125-fiscalizadores-tecnologia-aplicada-convocatoria-elecciones-regionales-municipales-2026-86904.html",
-        "archivo_web": "empleo-8.html"
-    },
-    {
-        "id": 9,
-        "titulo": "UGEL SURCUBAMBA  6 plazas | Contrato \"CAS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-surcubamba-asistente-legal-especialista-infraestructura-pad-convocatoria-julio-2026-86903.html",
-        "archivo_web": "empleo-9.html"
-    },
-    {
-        "id": 10,
-        "titulo": "UGEL HUANCAYO  2 plazas | Contrato \"CAS\"",
-        "enlace": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-huancayo-requiere-abogado-especialista-convivencia-escolar-convocatoria-julio-2026-86900.html",
-        "archivo_web": "empleo-10.html"
-    },
-    {
-        "id_interno": 11,
-        "titulo": "PROVIAS DESCENTRALIZADO  2 plazas | Contrato \"PRACTICAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-provias-descentralizado-requiere-practicantes-convocatoria-julio-2026-87192.html",
-        "archivo_web": "empleo-11.html",
-        "ubicacion": {
-            "departamento": "Ica",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 12,
-        "titulo": "MUNICIPALIDAD DE QUISPICANCHI  18 plazas | Contrato \"728\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-quispicanchi-serenazgos-conductores-vehiculo-motorizados-convocatoria-julio-2026-87191.html",
-        "archivo_web": "empleo-12.html",
-        "ubicacion": {
-            "departamento": "Cusco",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 13,
-        "titulo": "MUNICIPALIDAD DE MAGDALENA DEL MAR  156 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-magdalena-del-mar-156-supervisor-serenos-choferes-motorizados-convocatoria-julio-2026-87190.html",
-        "archivo_web": "empleo-13.html",
-        "ubicacion": {
-            "departamento": "Lima",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 14,
-        "titulo": "MUNICIPALIDAD DE REQUE  1 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-reque-requiere-especialista-seguridad-ciudadana-convocatoria-julio-2026-87189.html",
-        "archivo_web": "empleo-14.html",
-        "ubicacion": {
-            "departamento": "Lambayeque",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 15,
-        "titulo": "MINISTERIO PÚBLICO - FISCALÍA  19 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ministerio-publico-fiscalia-asistentes-operadores-peritos-cargos-convocatoria-julio-2026-87187.html",
-        "archivo_web": "empleo-15.html",
-        "ubicacion": {
-            "departamento": "Huancavelica",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 16,
-        "titulo": "MINISTERIO PÚBLICO - FISCALÍA  27 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ministerio-publico-fiscalia-asistentes-analistas-psicologos-cargos-convocatoria-julio-2026-87188.html",
-        "archivo_web": "empleo-16.html",
-        "ubicacion": {
-            "departamento": "Amazonas",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 17,
-        "titulo": "MUNICIPALIDAD DE OCONGATE  5 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-ocongate-especialista-asistente-auxiliar-cargos-convocatoria-julio-2026-87186.html",
-        "archivo_web": "empleo-17.html",
-        "ubicacion": {
-            "departamento": "Cusco",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 18,
-        "titulo": "HOSPITAL HIPOLITO UNANUE DE TACNA  1 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-hospital-hipolito-unanue-tacna-requiere-tecnico-enfermeria-convocatoria-julio-2026-87185.html",
-        "archivo_web": "empleo-18.html",
-        "ubicacion": {
-            "departamento": "Tacna",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 19,
-        "titulo": "UGEL 3  1 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-ugel-requiere-auxiliar-administrativo-convocatoria-julio-2026-87184.html",
-        "archivo_web": "empleo-19.html",
-        "ubicacion": {
-            "departamento": "Lima",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 20,
-        "titulo": "RED DE SALUD LA CONVENCIÓN  10 plazas | Contrato \"276\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-convencion-medicos-enfermeras-obstetra-tecnico-administrativo-convocatoria-julio-2026-87183.html",
-        "archivo_web": "empleo-20.html",
-        "ubicacion": {
-            "departamento": "Cusco",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 21,
-        "titulo": "MUNICIPALIDAD DE SAN MIGUEL  24 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-san-miguel-operarios-recoleccion-residuos-solidos-barrido-convocatoria-julio-2026-87182.html",
-        "archivo_web": "empleo-21.html",
-        "ubicacion": {
-            "departamento": "Lima",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 22,
-        "titulo": "RED DE SALUD LA CONVENCIÓN  1 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-convencion-requiere-especialista-administrativo-convocatoria-julio-2026-87181.html",
-        "archivo_web": "empleo-22.html",
-        "ubicacion": {
-            "departamento": "Cusco",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 23,
-        "titulo": "MUNICIPALIDAD DE CACHACHI  7 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-cachachi-subgerentes-secretarios-asistentes-cargos-convocatoria-julio-2026-87180.html",
-        "archivo_web": "empleo-23.html",
-        "ubicacion": {
-            "departamento": "Cajamarca",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 24,
-        "titulo": "RED DE SALUD MELGAR  16 plazas | Contrato \"LOCACIÓN DE SERVICIOS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-red-salud-melgar-servicios-digitaciones-auditoria-medica-convocatoria-julio-2026-87179.html",
-        "archivo_web": "empleo-24.html",
-        "ubicacion": {
-            "departamento": "Ica",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 25,
-        "titulo": "GOBIERNO REGIONAL PUNO  8 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-gobierno-regional-puno-especialista-administrativo-asistente-social-abogado-convocatoria-julio-2026-87178.html",
-        "archivo_web": "empleo-25.html",
-        "ubicacion": {
-            "departamento": "Puno",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 26,
-        "titulo": "MUNICIPALIDAD DE MARCONA  1 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-marcona-requiere-auxiliar-coactivo-convocatoria-julio-2026-87177.html",
-        "archivo_web": "empleo-26.html",
-        "ubicacion": {
-            "departamento": "Ica",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 27,
-        "titulo": "UNIVERSIDAD TORIBIO RODRÍGUEZ - UNTRM  2 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-universidad-toribio-rodriguez-untrm-requiere-personal-apoyo-administrativo-convocatoria-julio-2026-87176.html",
-        "archivo_web": "empleo-27.html",
-        "ubicacion": {
-            "departamento": "Amazonas",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 28,
-        "titulo": "FONCODES  1 plazas | Contrato \"728 \"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-foncodes-requiere-profesional-convocatoria-julio-2026-87175.html",
-        "archivo_web": "empleo-28.html",
-        "ubicacion": {
-            "departamento": "Lima",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 29,
-        "titulo": "D.R. TRANSPORTES TACNA  2 plazas | Contrato \"276\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-transportes-tacna-requiere-tecnico-trasporte-ingenieria-convocatoria-julio-2026-87174.html",
-        "archivo_web": "empleo-29.html",
-        "ubicacion": {
-            "departamento": "Tacna",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    },
-    {
-        "id_interno": 30,
-        "titulo": "MUNICIPALIDAD DE CHURCAMPA  4 plazas | Contrato \"CAS\"",
-        "enlace_origen": "https://www.convocatoriasdetrabajo.com/oferta-de-empleo-municipalidad-churcampa-responsables-diferentes-areas-serenazgo-convocatoria-julio-2026-87173.html",
-        "archivo_web": "empleo-30.html",
-        "ubicacion": {
-            "departamento": "Huancavelica",
-            "provincia": "Especificado en el enlace",
-            "distrito": "Especificado en el enlace"
-        }
-    }
+  {
+    "titulo": "PSICOLOGO (A)",
+    "entidad": "UNIDAD DE GESTIÓN EDUCATIVA LOCAL ACOBAMBA",
+    "ubicacion": "HUANCAVELICA - ANDABAMBA",
+    "departamento": "HUANCAVELICA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-03",
+    "vacantes": "1",
+    "remuneracion": "S/. 2,864.19",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "TRABAJADOR(A) SOCIAL",
+    "entidad": "PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR - INABIF",
+    "ubicacion": "HUANCAVELICA - CASTROVIRREYNA",
+    "departamento": "HUANCAVELICA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-258",
+    "vacantes": "1",
+    "remuneracion": "S/. 3,000.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "TÉCNICO/A EN GESTIÓN III",
+    "entidad": "ORGANISMO DE FORMALIZACION DE LA PROPIEDAD INFORMAL - COFOPRI",
+    "ubicacion": "APURIMAC - ABANCAY",
+    "departamento": "APURIMAC",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (SUPLENCIA)-0094",
+    "vacantes": "1",
+    "remuneracion": "S/. 2,500.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "REGISTRADOR PÚBLICO PARA LA OFICINA REGISTRAL DE CERRO DE PASCO",
+    "entidad": "ZONA REGISTRAL NRO. VIII - SEDE HUANCAYO",
+    "ubicacion": "PASCO - YANACANCHA",
+    "departamento": "PASCO",
+    "numero_convocatoria": "728-006",
+    "vacantes": "1",
+    "remuneracion": "S/. 6,900.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "ESPECIALISTA JUDICIAL DE JUZGADO",
+    "entidad": "CORTE SUPERIOR DE JUSTICIA DE PIURA",
+    "ubicacion": "PIURA - SECHURA",
+    "departamento": "PIURA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-028",
+    "vacantes": "1",
+    "remuneracion": "S/. 2,972.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "TRABAJADOR DE SERVICIO II",
+    "entidad": "UNIDAD DE GESTION EDUCATIVA LOCAL N. 05",
+    "ubicacion": "LIMA - SAN JUAN DE LURIGANCHO",
+    "departamento": "LIMA",
+    "numero_convocatoria": "276-075",
+    "vacantes": "1",
+    "remuneracion": "S/. 736.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "PROFESIONAL EN PSICOLOGÍA",
+    "entidad": "UNIDAD DE GESTION EDUCATIVA LOCAL N. 05",
+    "ubicacion": "LIMA - SAN JUAN DE LURIGANCHO",
+    "departamento": "LIMA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-068",
+    "vacantes": "1",
+    "remuneracion": "S/. 2,864.19",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  },
+  {
+    "titulo": "JEFE/A DE LA OFICINA DE PRESUPUESTO",
+    "entidad": "MUNICIPALIDAD DISTRITAL DE SAN ANTONIO",
+    "ubicacion": "MOQUEGUA - SAN ANTONIO",
+    "departamento": "MOQUEGUA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-003",
+    "vacantes": "1",
+    "remuneracion": "S/. 7,000.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026"
+  }
 ]

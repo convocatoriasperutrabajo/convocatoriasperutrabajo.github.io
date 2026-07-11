@@ -1,0 +1,56 @@
+name: Actualizar convocatorias
+
+on:
+  schedule:
+    # Corre todos los días a las 09:00 hora Perú (14:00 UTC)
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      max_paginas:
+        description: 'Límite de páginas a scrapear (vacío = todas)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Correr scraper
+        run: |
+          if [ -n "${{ github.event.inputs.max_paginas }}" ]; then
+            python scraper.py --max-paginas ${{ github.event.inputs.max_paginas }}
+          else
+            python scraper.py
+          fi
+
+      - name: Generar sitio estático
+        run: python generar_sitio.py
+
+      - name: Publicar ofertas nuevas en Facebook
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+        run: python facebook_poster.py --limite 15
+        continue-on-error: true  # si Facebook falla, igual queremos publicar el sitio actualizado
+
+      - name: Subir cambios al repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add empleos.json publicados_facebook.json index.html ofertas/
+          git diff --quiet --cached || git commit -m "Actualización automática de convocatorias"
+          git push
