@@ -4,7 +4,7 @@ Sitio estático que difunde convocatorias del portal oficial Talento Perú (SERV
 
 ## Actualización automática
 
-GitHub Actions ejecuta diariamente `scraper.py`, regenera el sitio y publica solo las convocatorias no publicadas antes en Facebook. La lista se conserva en `empleos.json`; cada convocatoria recibe un identificador estable basado en entidad, número, puesto y ubicación, por lo que no se mezclan números repetidos de entidades distintas.
+GitHub Actions ejecuta diariamente `scraper.py`, regenera el sitio y publica solo las convocatorias no publicadas antes en Facebook. La lista se conserva en `empleos.json`; cada convocatoria recibe un identificador estable basado en entidad, número, puesto y ubicación, por lo que no se mezclan números repetidos de entidades distintas. También conserva el Word oficial de las convocatorias nuevas, para que cada ficha tenga una descarga directa.
 
 ## Uso local
 

@@ -75,6 +75,14 @@ PIE = """
 
 def generar_pagina_detalle(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta.get("remuneracion", ""))
+    archivo_oficial = oferta.get("archivo_oficial", "")
+    boton_oficial = (
+        f'<a class="btn-oficial" href="../{html.escape(archivo_oficial)}" target="_blank" rel="noopener">'
+        'Descargar convocatoria oficial (Word) →</a>'
+        if archivo_oficial else
+        f'<a class="btn-oficial" href="{FUENTE_URL}" target="_blank" rel="noopener">'
+        'Ver en el portal oficial de SERVIR →</a>'
+    )
     return CABECERA.format(
         titulo=html.escape(f"{oferta['titulo']} — {oferta['entidad']}"),
         descripcion=html.escape(f"{oferta['titulo']} en {oferta['ubicacion']}. {oferta['vacantes']} vacante(s)."),
@@ -95,7 +103,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
         <div><dt>Número de convocatoria</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
         <div><dt>Vigencia</dt><dd>{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}</dd></div>
       </dl>
-      <a class="btn-oficial" href="{FUENTE_URL}" target="_blank" rel="noopener">Ver y postular en el portal oficial de SERVIR →</a>
+      {boton_oficial}
     </div>
   </article>
 </main>

@@ -51,6 +51,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add empleos.json publicados_facebook.json index.html ofertas/
+          git add empleos.json publicados_facebook.json index.html ofertas/ documentos_oficiales/
           git diff --quiet --cached || git commit -m "Actualización automática de convocatorias"
           git push

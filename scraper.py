@@ -12,6 +12,7 @@ import os
 import json
 import time
 import argparse
+from pathlib import Path
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -28,6 +29,7 @@ configurar_salida_utf8()
 
 URL = "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
 EMPLEOS_JSON = "empleos.json"
+CARPETA_DOCUMENTOS = Path("documentos_oficiales")
 
 
 def crear_driver(headless: bool = True):
@@ -38,6 +40,15 @@ def crear_driver(headless: bool = True):
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
+    # Los documentos se descargan desde el botón oficial "Convocatoria en
+    # Word". Chrome no muestra diálogos ni pide confirmación en cada archivo.
+    carpeta_descargas = str(CARPETA_DOCUMENTOS.resolve())
+    options.add_experimental_option("prefs", {
+        "download.default_directory": carpeta_descargas,
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True,
+    })
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     driver.set_page_load_timeout(60)
@@ -142,9 +153,95 @@ def guardar_empleos(diccionario_por_numero):
         json.dump(lista, f, ensure_ascii=False, indent=2)
 
 
-def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segundos: float = 1.5):
+def esperar_descarga(archivos_antes: set[Path], timeout_segundos: int = 45):
+    """Devuelve el archivo terminado que acaba de descargar Chrome."""
+    limite = time.time() + timeout_segundos
+    while time.time() < limite:
+        nuevos = [p for p in CARPETA_DOCUMENTOS.iterdir() if p not in archivos_antes]
+        terminados = [p for p in nuevos if p.is_file() and not p.name.endswith(".crdownload")]
+        if terminados and not any(p.name.endswith(".crdownload") for p in nuevos):
+            return max(terminados, key=lambda p: p.stat().st_mtime)
+        time.sleep(1)
+    return None
+
+
+def extension_documento(archivo: Path) -> str:
+    """SERVIR a veces descarga un .tmp que realmente es un .docx (ZIP)."""
+    if archivo.suffix.lower() == ".tmp":
+        try:
+            if archivo.read_bytes()[:4] == b"PK\x03\x04":
+                return ".docx"
+        except OSError:
+            pass
+    return archivo.suffix.lower() or ".docx"
+
+
+def normalizar_documentos_existentes(empleos: dict) -> int:
+    """Corrige extensiones temporales ya asociadas a convocatorias."""
+    corregidos = 0
+    for oferta in empleos.values():
+        ruta = oferta.get("archivo_oficial")
+        if not ruta:
+            continue
+        archivo = Path(ruta)
+        if archivo.exists() and archivo.suffix.lower() == ".tmp":
+            destino = archivo.with_suffix(extension_documento(archivo))
+            if destino != archivo:
+                archivo.replace(destino)
+                oferta["archivo_oficial"] = destino.as_posix()
+                corregidos += 1
+    return corregidos
+
+
+def descargar_documentos_pagina(driver, ofertas: list[dict], empleos: dict, restantes: int) -> int:
+    """Guarda los Word oficiales faltantes y devuelve cuántos se descargaron."""
+    if restantes <= 0:
+        return 0
+
+    botones = driver.find_elements(By.CSS_SELECTOR, "button[title='Convocatoria en Word']")
+    descargados = 0
+    for indice, oferta_sin_id in enumerate(ofertas):
+        if descargados >= restantes or indice >= len(botones):
+            break
+
+        oferta = asegurar_id(oferta_sin_id)
+        previo = empleos.get(oferta["id"], {})
+        archivo_relativo = previo.get("archivo_oficial") or oferta.get("archivo_oficial")
+        if archivo_relativo and Path(archivo_relativo).exists():
+            oferta_sin_id["archivo_oficial"] = archivo_relativo
+            continue
+
+        antes = set(CARPETA_DOCUMENTOS.iterdir())
+        try:
+            # Se vuelve a localizar porque el DOM puede refrescarse después de
+            # una descarga anterior.
+            botones = driver.find_elements(By.CSS_SELECTOR, "button[title='Convocatoria en Word']")
+            botones[indice].click()
+            archivo = esperar_descarga(antes)
+            if not archivo:
+                print(f"   No se descargó el Word de: {oferta['titulo']}")
+                continue
+
+            destino = CARPETA_DOCUMENTOS / f"{oferta['id']}{extension_documento(archivo)}"
+            if archivo != destino:
+                if destino.exists():
+                    destino.unlink()
+                archivo.replace(destino)
+            oferta_sin_id["archivo_oficial"] = destino.as_posix()
+            descargados += 1
+            print(f"   Word oficial guardado: {destino.name}")
+        except Exception as e:
+            print(f"   No se pudo descargar el Word de '{oferta['titulo']}': {e}")
+    return descargados
+
+
+def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segundos: float = 1.5,
+                     max_documentos: int = 20):
     empleos = cargar_empleos_existentes()
     total_antes = len(empleos)
+    CARPETA_DOCUMENTOS.mkdir(exist_ok=True)
+    documentos_corregidos = normalizar_documentos_existentes(empleos)
+    documentos_descargados = 0
 
     driver = crear_driver(headless=headless)
     pagina_actual = 1
@@ -163,10 +260,17 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
             ofertas = extraer_ofertas_de_texto(soup.get_text())
             print(f"   {len(ofertas)} ofertas detectadas en esta página")
 
+            documentos_descargados += descargar_documentos_pagina(
+                driver, ofertas, empleos, max_documentos - documentos_descargados
+            )
+
             # El número puede repetirse entre entidades; el ID también toma
             # entidad, puesto y ubicación para impedir falsos duplicados.
             for oferta in ofertas:
                 oferta = asegurar_id(oferta)
+                anterior = empleos.get(oferta["id"], {})
+                if "archivo_oficial" in anterior and "archivo_oficial" not in oferta:
+                    oferta["archivo_oficial"] = anterior["archivo_oficial"]
                 empleos[oferta["id"]] = oferta
 
             if max_paginas and pagina_actual >= max_paginas:
@@ -195,6 +299,9 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
     print("\n================ RESUMEN ================")
     print(f"Ofertas antes de esta corrida: {total_antes}")
     print(f"Ofertas nuevas encontradas:    {len(empleos) - total_antes}")
+    print(f"Documentos oficiales bajados:  {documentos_descargados}")
+    if documentos_corregidos:
+        print(f"Extensiones de Word corregidas: {documentos_corregidos}")
     print(f"Total acumulado en empleos.json: {len(empleos)}")
     print("===========================================")
 
@@ -203,6 +310,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scraper de Talento Perú (SERVIR)")
     parser.add_argument("--max-paginas", type=int, default=None)
     parser.add_argument("--visible", action="store_true")
+    parser.add_argument("--max-documentos", type=int, default=20,
+                        help="máximo de Word oficiales a bajar por ejecución (0 = ninguno)")
+    parser.add_argument("--normalizar-documentos", action="store_true",
+                        help="corrige extensiones temporales de Word y termina")
     args = parser.parse_args()
 
-    ejecutar_scraper(max_paginas=args.max_paginas, headless=not args.visible)
+    if args.normalizar_documentos:
+        empleos = cargar_empleos_existentes()
+        corregidos = normalizar_documentos_existentes(empleos)
+        guardar_empleos(empleos)
+        print(f"Extensiones de Word corregidas: {corregidos}")
+    else:
+        ejecutar_scraper(max_paginas=args.max_paginas, headless=not args.visible,
+                         max_documentos=args.max_documentos)

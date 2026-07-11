@@ -8,7 +8,8 @@
     "vacantes": "1",
     "remuneracion": "S/. 2,864.19",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "id": "115f393b55bd730e600e"
   },
   {
     "titulo": "TRABAJADOR(A) SOCIAL",
@@ -19,7 +20,8 @@
     "vacantes": "1",
     "remuneracion": "S/. 3,000.00",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "id": "6b268a03697786fc2362"
   },
   {
     "titulo": "TÉCNICO/A EN GESTIÓN III",
@@ -30,7 +32,9 @@
     "vacantes": "1",
     "remuneracion": "S/. 2,500.00",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/59fe2404a033dee78622.docx",
+    "id": "59fe2404a033dee78622"
   },
   {
     "titulo": "REGISTRADOR PÚBLICO PARA LA OFICINA REGISTRAL DE CERRO DE PASCO",
@@ -41,7 +45,9 @@
     "vacantes": "1",
     "remuneracion": "S/. 6,900.00",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/cac8d1b9a831d362d724.docx",
+    "id": "cac8d1b9a831d362d724"
   },
   {
     "titulo": "ESPECIALISTA JUDICIAL DE JUZGADO",
@@ -52,7 +58,9 @@
     "vacantes": "1",
     "remuneracion": "S/. 2,972.00",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/8c1c4463b37d5342ff8e.docx",
+    "id": "8c1c4463b37d5342ff8e"
   },
   {
     "titulo": "TRABAJADOR DE SERVICIO II",
@@ -63,7 +71,9 @@
     "vacantes": "1",
     "remuneracion": "S/. 736.00",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/ce739f030552a2bbafca.docx",
+    "id": "ce739f030552a2bbafca"
   },
   {
     "titulo": "PROFESIONAL EN PSICOLOGÍA",
@@ -74,7 +84,9 @@
     "vacantes": "1",
     "remuneracion": "S/. 2,864.19",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/1422a3a7d08681d32307.docx",
+    "id": "1422a3a7d08681d32307"
   },
   {
     "titulo": "JEFE/A DE LA OFICINA DE PRESUPUESTO",
@@ -85,6 +97,60 @@
     "vacantes": "1",
     "remuneracion": "S/. 7,000.00",
     "fecha_inicio": "10/07/2026",
-    "fecha_fin": "24/07/2026"
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/c779b7779c8db3d4ebd4.docx",
+    "id": "c779b7779c8db3d4ebd4"
+  },
+  {
+    "titulo": "SUBGERENTE/A DE SUPERVISION Y LIQUIDACION",
+    "entidad": "MUNICIPALIDAD DISTRITAL DE SAN ANTONIO",
+    "ubicacion": "MOQUEGUA - SAN ANTONIO",
+    "departamento": "MOQUEGUA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-003",
+    "vacantes": "1",
+    "remuneracion": "S/. 7,200.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/d9304b5f85728ac1c444.docx",
+    "id": "d9304b5f85728ac1c444"
+  },
+  {
+    "titulo": "JEFE/A DE LA OFICINA DE PROGRAMACIÓN MULTIANUAL DE INVERSIONES",
+    "entidad": "MUNICIPALIDAD DISTRITAL DE SAN ANTONIO",
+    "ubicacion": "MOQUEGUA - SAN ANTONIO",
+    "departamento": "MOQUEGUA",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-003",
+    "vacantes": "1",
+    "remuneracion": "S/. 6,500.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/fac21decc289ec7638e6.docx",
+    "id": "fac21decc289ec7638e6"
+  },
+  {
+    "titulo": "RESPONSABLE DEL AREA TECNICA MUNICIPAL (ATM)",
+    "entidad": "MUNICIPALIDAD DISTRITAL DE ACOS VINCHOS",
+    "ubicacion": "AYACUCHO - ACOS VINCHOS",
+    "departamento": "AYACUCHO",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-002",
+    "vacantes": "1",
+    "remuneracion": "S/. 1,800.00",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/1969f9f1c295d1dbb08e.docx",
+    "id": "1969f9f1c295d1dbb08e"
+  },
+  {
+    "titulo": "TRABAJADOR SOCIAL",
+    "entidad": "REGION AYACUCHO SALUD SARASARA",
+    "ubicacion": "AYACUCHO - CORACORA",
+    "departamento": "AYACUCHO",
+    "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-1",
+    "vacantes": "2",
+    "remuneracion": "S/. 6,176.55",
+    "fecha_inicio": "10/07/2026",
+    "fecha_fin": "24/07/2026",
+    "archivo_oficial": "documentos_oficiales/f446376bba5d28b4f0df.docx",
+    "id": "f446376bba5d28b4f0df"
   }
 ]
