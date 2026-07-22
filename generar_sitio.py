@@ -1,8 +1,8 @@
 """
 generar_sitio.py
 Lee empleos.json y genera:
-  - index.html (listado agrupado por regiÃ³n)
-  - ofertas/<slug>.html (una pÃ¡gina de detalle por cada oferta)
+  - index.html (listado agrupado por región)
+  - ofertas/<slug>.html (una página de detalle por cada oferta)
 
 Uso:
     python generar_sitio.py
@@ -47,10 +47,10 @@ CABECERA = """<!DOCTYPE html>
 <body>
 <header class="masthead">
   <div class="masthead-inner">
-    <a href="{ruta_css}index.html" class="masthead-mark-link"><span class="masthead-mark">â˜°</span></a>
+    <a href="{ruta_css}index.html" class="masthead-mark-link"><span class="masthead-mark">☰</span></a>
     <div class="masthead-text">
-      <h1><a href="{ruta_css}index.html">Bolsa de Empleo PÃºblico â€” PerÃº</a></h1>
-      <p class="masthead-sub">Recopilado automÃ¡ticamente del portal oficial de SERVIR (Talento PerÃº) Â· no es un sitio del Estado</p>
+      <h1><a href="{ruta_css}index.html">Bolsa de Empleo Público — Perú</a></h1>
+      <p class="masthead-sub">Recopilado automáticamente del portal oficial de SERVIR (Talento Perú) · no es un sitio del Estado</p>
     </div>
   </div>
 </header>
@@ -58,8 +58,8 @@ CABECERA = """<!DOCTYPE html>
 
 PIE = """
 <footer class="colophon">
-  <p>Los datos de esta pÃ¡gina provienen del <a href="{fuente}" target="_blank" rel="noopener">portal oficial de SERVIR â€” Talento PerÃº</a>.
-  Este es un sitio de difusiÃ³n independiente y no oficial; verifica siempre los detalles y postula directamente en el portal del Estado.</p>
+  <p>Los datos de esta página provienen del <a href="{fuente}" target="_blank" rel="noopener">portal oficial de SERVIR — Talento Perú</a>.
+  Este es un sitio de difusión independiente y no oficial; verifica siempre los detalles y postula directamente en el portal del Estado.</p>
 </footer>
 </body>
 </html>
@@ -72,15 +72,15 @@ def generar_pagina_detalle(oferta: dict) -> str:
     url_oficial = oferta.get("url_oficial") or FUENTE_URL
     boton_documento = (
         f'<a class="btn-oficial" href="../{html.escape(archivo_oficial)}" target="_blank" rel="noopener">'
-        'Abrir documento oficial de esta convocatoria â†’</a>'
+        'Abrir documento oficial de esta convocatoria →</a>'
         if archivo_oficial else ""
     )
     boton_fuente = (
         f'<a class="btn-fuente" href="{html.escape(url_oficial, quote=True)}" '
-        'target="_blank" rel="noopener">Ir a la fuente oficial del Estado â†’</a>'
+        'target="_blank" rel="noopener">Ir a la fuente oficial del Estado →</a>'
     )
     return CABECERA.format(
-        titulo=html.escape(f"{oferta['titulo']} â€” {oferta['entidad']}"),
+        titulo=html.escape(f"{oferta['titulo']} — {oferta['entidad']}"),
         descripcion=html.escape(f"{oferta['titulo']} en {oferta['ubicacion']}. {oferta['vacantes']} vacante(s)."),
         ruta_css="../",
     ) + f"""
@@ -94,10 +94,10 @@ def generar_pagina_detalle(oferta: dict) -> str:
       <h2 class="notice-title">{html.escape(oferta['titulo'])}</h2>
       <p class="notice-entity">{html.escape(oferta['entidad'])}</p>
       <dl class="notice-facts">
-        <div><dt>UbicaciÃ³n</dt><dd>{html.escape(oferta['ubicacion'])}</dd></div>
-        <div><dt>RemuneraciÃ³n</dt><dd>{html.escape(remuneracion)}</dd></div>
-        <div><dt>NÃºmero de convocatoria</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
-        <div><dt>Vigencia</dt><dd>{html.escape(oferta['fecha_inicio'])} â€” {html.escape(oferta['fecha_fin'])}</dd></div>
+        <div><dt>Ubicación</dt><dd>{html.escape(oferta['ubicacion'])}</dd></div>
+        <div><dt>Remuneración</dt><dd>{html.escape(remuneracion)}</dd></div>
+        <div><dt>Número de convocatoria</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
+        <div><dt>Vigencia</dt><dd>{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}</dd></div>
       </dl>
       <p class="aviso-oficial">Verifica los requisitos y el cronograma antes de postular.</p>
       <div class="acciones-oficiales">{boton_documento}{boton_fuente}</div>
@@ -111,7 +111,7 @@ def generar_index(empleos: list) -> str:
     por_departamento = {}
     for original in empleos:
         o = asegurar_id(original)
-        depto = o.get("departamento") or "Sin regiÃ³n especificada"
+        depto = o.get("departamento") or "Sin región especificada"
         por_departamento.setdefault(depto, []).append(o)
 
     secciones_html = []
@@ -123,23 +123,23 @@ def generar_index(empleos: list) -> str:
                 <li>
                     <a href="ofertas/{archivo}" class="job-link">
                         <span class="job-title">{html.escape(o['titulo'])}</span>
-                        <span class="job-meta">{html.escape(o['entidad'])} Â· {html.escape(o['vacantes'])} vacante(s)</span>
+                        <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s)</span>
                     </a>
                 </li>""")
         secciones_html.append(f"""
         <section class="dep-section">
-            <h2>ðŸ“ {html.escape(depto)}</h2>
+            <h2>📍 {html.escape(depto)}</h2>
             <ul class="job-list">{''.join(items)}</ul>
         </section>""")
 
     contenido = CABECERA.format(
-        titulo="Bolsa de Empleo PÃºblico â€” PerÃº (fuente: SERVIR)",
-        descripcion="Convocatorias laborales del sector pÃºblico peruano, recopiladas automÃ¡ticamente del portal oficial de SERVIR.",
+        titulo="Bolsa de Empleo Público — Perú (fuente: SERVIR)",
+        descripcion="Convocatorias laborales del sector público peruano, recopiladas automáticamente del portal oficial de SERVIR.",
         ruta_css="",
     ) + f"""
 <main class="layout-index">
   <p class="total-ofertas">{len(empleos)} ofertas registradas actualmente.</p>
-  {''.join(secciones_html) if secciones_html else '<p class="empty-state">TodavÃ­a no hay ofertas cargadas. Corre scraper.py primero.</p>'}
+  {''.join(secciones_html) if secciones_html else '<p class="empty-state">Todavía no hay ofertas cargadas. Corre scraper.py primero.</p>'}
 </main>
 """ + PIE
 
@@ -152,7 +152,7 @@ def ejecutar():
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(generar_index(empleos))
-    print(f"âœ… index.html generado con {len(empleos)} ofertas")
+    print(f"✅ index.html generado con {len(empleos)} ofertas")
 
     esperados = set()
     for original in empleos:
@@ -169,9 +169,9 @@ def ejecutar():
             os.remove(os.path.join(CARPETA_OFERTAS, archivo))
             eliminadas += 1
 
-    print(f"âœ… {len(empleos)} pÃ¡ginas de detalle generadas en /{CARPETA_OFERTAS}/")
+    print(f"✅ {len(empleos)} páginas de detalle generadas en /{CARPETA_OFERTAS}/")
     if eliminadas:
-        print(f"ðŸ§¹ {eliminadas} pÃ¡ginas obsoletas eliminadas")
+        print(f"🧹 {eliminadas} páginas obsoletas eliminadas")
 
 
 if __name__ == "__main__":

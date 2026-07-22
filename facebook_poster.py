@@ -1,15 +1,15 @@
 """
 facebook_poster.py
-Publica en tu PÃ¡gina de Facebook las ofertas de empleos.json que aÃºn no
+Publica en tu Página de Facebook las ofertas de empleos.json que aún no
 se hayan publicado (registro en publicados_facebook.json).
 
-ConfiguraciÃ³n (variables de entorno o archivo .env):
+Configuración (variables de entorno o archivo .env):
     FB_PAGE_ID
     FB_PAGE_ACCESS_TOKEN
 
 Uso:
     python facebook_poster.py --dry-run       -> solo muestra, no publica
-    python facebook_poster.py --limite 5      -> publica mÃ¡ximo 5
+    python facebook_poster.py --limite 5      -> publica máximo 5
 """
 import os
 import json
@@ -65,13 +65,13 @@ def formatear_mensaje(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta["remuneracion"])
     ficha_url = f"{SITIO_URL}/ofertas/{nombre_archivo_oferta(oferta)}"
     return (
-        f"ðŸ“¢ NUEVA CONVOCATORIA\n\n"
-        f"ðŸ”¹ {oferta['titulo']}\n"
-        f"ðŸ¢ {oferta['entidad']}\n"
-        f"ðŸ“ {oferta['ubicacion']}\n"
-        f"ðŸ’° RemuneraciÃ³n: {remuneracion}\n"
-        f"ðŸ‘¥ Vacantes: {oferta['vacantes']}\n"
-        f"ðŸ“… PublicaciÃ³n: {oferta['fecha_inicio']} â€” Cierre: {oferta['fecha_fin']}\n\n"
+        f"📢 NUEVA CONVOCATORIA\n\n"
+        f"🔹 {oferta['titulo']}\n"
+        f"🏢 {oferta['entidad']}\n"
+        f"📍 {oferta['ubicacion']}\n"
+        f"💰 Remuneración: {remuneracion}\n"
+        f"👥 Vacantes: {oferta['vacantes']}\n"
+        f"📅 Publicación: {oferta['fecha_inicio']} — Cierre: {oferta['fecha_fin']}\n\n"
         f"Consulta la ficha, el documento oficial y el acceso a SERVIR:\n"
         f"{ficha_url}\n\n"
         f"#TrabajoPeru #Convocatoria #EmpleoPublico"
@@ -91,7 +91,7 @@ def ejecutar_publicador(limite: int = 20, dry_run: bool = False, pausa_segundos:
     empleos = cargar_json(EMPLEOS_JSON, [])
     publicados = set(cargar_json(PUBLICADOS_JSON, []))
 
-    # Compatibilidad: versiones anteriores guardaban solo el nÃºmero de
+    # Compatibilidad: versiones anteriores guardaban solo el número de
     # convocatoria. Se respeta ese registro para no republicar al migrar.
     pendientes = [
         asegurar_id(o) for o in empleos
@@ -120,20 +120,20 @@ def ejecutar_publicador(limite: int = 20, dry_run: bool = False, pausa_segundos:
             resultado = publicar_en_facebook(page_id, token, mensaje)
             publicados.add(oferta["id"])
             guardar_json(PUBLICADOS_JSON, sorted(publicados))  # guarda progreso tras cada post
-            print(f"[{i}/{len(pendientes)}] âœ… Publicado: {oferta['titulo']} (post id: {resultado.get('id')})")
+            print(f"[{i}/{len(pendientes)}] ✅ Publicado: {oferta['titulo']} (post id: {resultado.get('id')})")
         except Exception as e:
-            print(f"[{i}/{len(pendientes)}] âŒ Error publicando '{oferta['titulo']}': {e}")
+            print(f"[{i}/{len(pendientes)}] ❌ Error publicando '{oferta['titulo']}': {e}")
             errores.append(oferta["id"])
 
         if i < len(pendientes):
             time.sleep(pausa_segundos)
 
     if errores:
-        raise RuntimeError(f"Facebook rechazÃ³ {len(errores)} publicaciÃ³n(es)")
+        raise RuntimeError(f"Facebook rechazó {len(errores)} publicación(es)")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Publica ofertas pendientes en la PÃ¡gina de Facebook")
+    parser = argparse.ArgumentParser(description="Publica ofertas pendientes en la Página de Facebook")
     parser.add_argument("--limite", type=int, default=20)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--pausa", type=float, default=20)

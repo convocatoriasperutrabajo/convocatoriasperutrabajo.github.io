@@ -7,7 +7,7 @@ from validar_sitio import es_url_oficial
 
 
 OFERTA = {
-    "titulo": "TÃ‰CNICO/A EN GESTIÃ“N III",
+    "titulo": "TÉCNICO/A EN GESTIÓN III",
     "entidad": "ENTIDAD DE PRUEBA",
     "ubicacion": "CUSCO - CUSCO",
     "numero_convocatoria": "CAS-001",
