@@ -1,10 +1,10 @@
 """
 scraper.py
-Recorre las pÃ¡ginas del portal oficial de Talento PerÃº (SERVIR) y guarda
+Recorre las páginas del portal oficial de Talento Perú (SERVIR) y guarda
 cada oferta en empleos.json, evitando duplicados (por numero_convocatoria).
 
 Uso:
-    python scraper.py                  -> recorre todas las pÃ¡ginas
+    python scraper.py                  -> recorre todas las páginas
     python scraper.py --max-paginas 5  -> solo las primeras 5 (para pruebas)
 """
 import re
@@ -41,8 +41,8 @@ def crear_driver(headless: bool = True):
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
-    # Los documentos se descargan desde el botÃ³n oficial "Convocatoria en
-    # Word". Chrome no muestra diÃ¡logos ni pide confirmaciÃ³n en cada archivo.
+    # Los documentos se descargan desde el botón oficial "Convocatoria en
+    # Word". Chrome no muestra diálogos ni pide confirmación en cada archivo.
     carpeta_descargas = str(CARPETA_DOCUMENTOS.resolve())
     options.add_experimental_option("prefs", {
         "download.default_directory": carpeta_descargas,
@@ -57,9 +57,9 @@ def crear_driver(headless: bool = True):
 
 
 def extraer_ofertas_de_texto(texto: str):
-    """Parsea el texto plano de la pÃ¡gina usando los patrones de campo fijos."""
+    """Parsea el texto plano de la página usando los patrones de campo fijos."""
     ofertas = []
-    bloques = re.split(r'UbicaciÃ³n:\s*', texto)
+    bloques = re.split(r'Ubicación:\s*', texto)
 
     for i in range(1, len(bloques)):
         bloque_anterior = bloques[i - 1]
@@ -69,12 +69,12 @@ def extraer_ofertas_de_texto(texto: str):
         titulo = lineas_anteriores[-2] if len(lineas_anteriores) >= 2 else ""
         entidad = lineas_anteriores[-1] if len(lineas_anteriores) >= 1 else ""
 
-        ubicacion_match = re.search(r'^(.*?)NÃºmero de Convocatoria', bloque_actual, re.DOTALL)
-        convocatoria_match = re.search(r'NÃºmero de Convocatoria:\s*(.*?)Cantidad de Vacantes', bloque_actual, re.DOTALL)
-        vacantes_match = re.search(r'Cantidad de Vacantes:\s*(.*?)RemuneraciÃ³n', bloque_actual, re.DOTALL)
-        remuneracion_match = re.search(r'RemuneraciÃ³n:\s*(.*?)Fecha Inicio', bloque_actual, re.DOTALL)
-        fecha_inicio_match = re.search(r'PublicaciÃ³n:\s*(\d{2}/\d{2}/\d{4})', bloque_actual)
-        fecha_fin_match = re.search(r'Fecha Fin de PublicaciÃ³n:\s*(\d{2}/\d{2}/\d{4})', bloque_actual)
+        ubicacion_match = re.search(r'^(.*?)Número de Convocatoria', bloque_actual, re.DOTALL)
+        convocatoria_match = re.search(r'Número de Convocatoria:\s*(.*?)Cantidad de Vacantes', bloque_actual, re.DOTALL)
+        vacantes_match = re.search(r'Cantidad de Vacantes:\s*(.*?)Remuneración', bloque_actual, re.DOTALL)
+        remuneracion_match = re.search(r'Remuneración:\s*(.*?)Fecha Inicio', bloque_actual, re.DOTALL)
+        fecha_inicio_match = re.search(r'Publicación:\s*(\d{2}/\d{2}/\d{4})', bloque_actual)
+        fecha_fin_match = re.search(r'Fecha Fin de Publicación:\s*(\d{2}/\d{2}/\d{4})', bloque_actual)
 
         def limpio(m):
             return re.sub(r'\s+', ' ', m.group(1)).strip() if m else ""
@@ -92,7 +92,7 @@ def extraer_ofertas_de_texto(texto: str):
             "remuneracion": limpio(remuneracion_match),
             "fecha_inicio": fecha_inicio_match.group(1) if fecha_inicio_match else "",
             "fecha_fin": fecha_fin_match.group(1) if fecha_fin_match else "",
-            "fuente": "SERVIR - Talento PerÃº",
+            "fuente": "SERVIR - Talento Perú",
             "url_oficial": URL,
         }
 
@@ -104,8 +104,8 @@ def extraer_ofertas_de_texto(texto: str):
 
 def obtener_numero_pagina_actual(driver):
     try:
-        texto = driver.find_element(By.XPATH, "//*[contains(text(),'PÃ¡gina') and contains(text(),'de')]").text
-        m = re.search(r'PÃ¡gina\s+(\d+)\s+de\s+(\d+)', texto)
+        texto = driver.find_element(By.XPATH, "//*[contains(text(),'Página') and contains(text(),'de')]").text
+        m = re.search(r'Página\s+(\d+)\s+de\s+(\d+)', texto)
         if m:
             return int(m.group(1)), int(m.group(2))
     except Exception:
@@ -151,13 +151,13 @@ def cargar_empleos_existentes():
 
 def guardar_empleos(diccionario_por_numero):
     lista = list(diccionario_por_numero.values())
-    # MÃ¡s recientes primero (por fecha de inicio de publicaciÃ³n cuando se pueda comparar)
+    # Más recientes primero (por fecha de inicio de publicación cuando se pueda comparar)
     with open(EMPLEOS_JSON, "w", encoding="utf-8") as f:
         json.dump(lista, f, ensure_ascii=False, indent=2)
 
 
 def retirar_ofertas_vencidas(empleos: dict, hoy: date | None = None) -> int:
-    """Retira del sitio convocatorias cuya fecha de cierre ya pasÃ³."""
+    """Retira del sitio convocatorias cuya fecha de cierre ya pasó."""
     hoy = hoy or date.today()
     vencidas = []
     for identificador, oferta in empleos.items():
@@ -215,7 +215,7 @@ def normalizar_documentos_existentes(empleos: dict) -> int:
 
 
 def descargar_documentos_pagina(driver, ofertas: list[dict], empleos: dict, restantes: int) -> int:
-    """Guarda los Word oficiales faltantes y devuelve cuÃ¡ntos se descargaron."""
+    """Guarda los Word oficiales faltantes y devuelve cuántos se descargaron."""
     if restantes <= 0:
         return 0
 
@@ -234,13 +234,13 @@ def descargar_documentos_pagina(driver, ofertas: list[dict], empleos: dict, rest
 
         antes = set(CARPETA_DOCUMENTOS.iterdir())
         try:
-            # Se vuelve a localizar porque el DOM puede refrescarse despuÃ©s de
+            # Se vuelve a localizar porque el DOM puede refrescarse después de
             # una descarga anterior.
             botones = driver.find_elements(By.CSS_SELECTOR, "button[title='Convocatoria en Word']")
             botones[indice].click()
             archivo = esperar_descarga(antes)
             if not archivo:
-                print(f"   No se descargÃ³ el Word de: {oferta['titulo']}")
+                print(f"   No se descargó el Word de: {oferta['titulo']}")
                 continue
 
             destino = CARPETA_DOCUMENTOS / f"{oferta['id']}{extension_documento(archivo)}"
@@ -276,21 +276,21 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
         )
 
         while True:
-            print(f"\n--- Procesando pÃ¡gina {pagina_actual} ---")
+            print(f"\n--- Procesando página {pagina_actual} ---")
             soup = BeautifulSoup(driver.page_source, "html.parser")
             ofertas = extraer_ofertas_de_texto(soup.get_text())
-            print(f"   {len(ofertas)} ofertas detectadas en esta pÃ¡gina")
+            print(f"   {len(ofertas)} ofertas detectadas en esta página")
             if not ofertas:
                 raise RuntimeError(
-                    "SERVIR no devolviÃ³ convocatorias. El portal pudo cambiar o bloquear la consulta."
+                    "SERVIR no devolvió convocatorias. El portal pudo cambiar o bloquear la consulta."
                 )
 
             documentos_descargados += descargar_documentos_pagina(
                 driver, ofertas, empleos, max_documentos - documentos_descargados
             )
 
-            # El nÃºmero puede repetirse entre entidades; el ID tambiÃ©n toma
-            # entidad, puesto y ubicaciÃ³n para impedir falsos duplicados.
+            # El número puede repetirse entre entidades; el ID también toma
+            # entidad, puesto y ubicación para impedir falsos duplicados.
             for oferta in ofertas:
                 oferta = asegurar_id(oferta)
                 anterior = empleos.get(oferta["id"], {})
@@ -299,20 +299,20 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
                 empleos[oferta["id"]] = oferta
 
             if max_paginas and pagina_actual >= max_paginas:
-                print(f"\nLÃ­mite de pÃ¡ginas de prueba alcanzado ({max_paginas}).")
+                print(f"\nLímite de páginas de prueba alcanzado ({max_paginas}).")
                 break
 
             num_actual, num_total = obtener_numero_pagina_actual(driver)
             if num_total and num_actual and num_actual >= num_total:
-                print("\nSe llegÃ³ a la Ãºltima pÃ¡gina.")
+                print("\nSe llegó a la última página.")
                 break
 
             if not hacer_click_siguiente(driver):
                 if num_total and num_actual and num_actual < num_total:
                     raise RuntimeError(
-                        f"La paginaciÃ³n se detuvo en {num_actual} de {num_total}; no se guardarÃ¡ una actualizaciÃ³n incompleta."
+                        f"La paginación se detuvo en {num_actual} de {num_total}; no se guardará una actualización incompleta."
                     )
-                print("\nNo se pudo avanzar mÃ¡s; se considera el final de la paginaciÃ³n.")
+                print("\nNo se pudo avanzar más; se considera el final de la paginación.")
                 break
 
             pagina_actual += 1
@@ -337,11 +337,11 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Scraper de Talento PerÃº (SERVIR)")
+    parser = argparse.ArgumentParser(description="Scraper de Talento Perú (SERVIR)")
     parser.add_argument("--max-paginas", type=int, default=None)
     parser.add_argument("--visible", action="store_true")
     parser.add_argument("--max-documentos", type=int, default=20,
-                        help="mÃ¡ximo de Word oficiales a bajar por ejecuciÃ³n (0 = ninguno)")
+                        help="máximo de Word oficiales a bajar por ejecución (0 = ninguno)")
     parser.add_argument("--normalizar-documentos", action="store_true",
                         help="corrige extensiones temporales de Word y termina")
     args = parser.parse_args()

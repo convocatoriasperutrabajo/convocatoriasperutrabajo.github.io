@@ -4,7 +4,7 @@ import re
 import unicodedata
 
 
-FUENTE_OFICIAL = "SERVIR - Talento PerÃº"
+FUENTE_OFICIAL = "SERVIR - Talento Perú"
 URL_OFICIAL_SERVIR = "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
 
 
@@ -16,7 +16,7 @@ def texto_clave(valor: object) -> str:
 
 
 def id_oferta(oferta: dict) -> str:
-    """ID estable aun cuando dos entidades reutilicen el mismo nÃºmero."""
+    """ID estable aun cuando dos entidades reutilicen el mismo número."""
     partes = (
         texto_clave(oferta.get("entidad")),
         texto_clave(oferta.get("numero_convocatoria")),
@@ -42,7 +42,7 @@ def slugificar(valor: object, limite: int = 80) -> str:
 
 
 def nombre_archivo_oferta(oferta: dict) -> str:
-    """Nombre Ãºnico de la ficha publicada en el sitio."""
+    """Nombre único de la ficha publicada en el sitio."""
     oferta = asegurar_id(oferta)
     base = f"{oferta['id']}-{oferta.get('titulo', '')}"
     return f"{slugificar(base)}.html"

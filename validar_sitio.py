@@ -31,7 +31,7 @@ def es_url_oficial(url: str) -> bool:
 def validar() -> None:
     empleos = json.loads((RAIZ / "empleos.json").read_text(encoding="utf-8"))
     if not empleos:
-        raise RuntimeError("empleos.json estÃ¡ vacÃ­o; se cancela la publicaciÃ³n")
+        raise RuntimeError("empleos.json está vacío; se cancela la publicación")
 
     ids = set()
     esperadas = set()
@@ -63,12 +63,12 @@ def validar() -> None:
     generadas = {p.name for p in (RAIZ / "ofertas").glob("*.html")}
     sobrantes = sorted(generadas - esperadas)
     if sobrantes:
-        errores.append(f"hay pÃ¡ginas obsoletas: {', '.join(sobrantes[:5])}")
+        errores.append(f"hay páginas obsoletas: {', '.join(sobrantes[:5])}")
 
     if errores:
-        raise RuntimeError("Sitio invÃ¡lido:\n- " + "\n- ".join(errores))
+        raise RuntimeError("Sitio inválido:\n- " + "\n- ".join(errores))
 
-    print(f"âœ… Sitio validado: {len(empleos)} ofertas de fuente oficial")
+    print(f"✅ Sitio validado: {len(empleos)} ofertas de fuente oficial")
 
 
 if __name__ == "__main__":
