@@ -1,7 +1,7 @@
 [
   {
     "titulo": "PSICOLOGO (A)",
-    "entidad": "UNIDAD DE GESTIÓN EDUCATIVA LOCAL ACOBAMBA",
+    "entidad": "UNIDAD DE GESTIÃ“N EDUCATIVA LOCAL ACOBAMBA",
     "ubicacion": "HUANCAVELICA - ANDABAMBA",
     "departamento": "HUANCAVELICA",
     "numero_convocatoria": "D.LEG 1057 - DETERMINADO (NECESIDAD TRANSITORIA)-03",
@@ -9,7 +9,9 @@
     "remuneracion": "S/. 2,864.19",
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
-    "id": "115f393b55bd730e600e"
+    "id": "115f393b55bd730e600e",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "TRABAJADOR(A) SOCIAL",
@@ -21,10 +23,12 @@
     "remuneracion": "S/. 3,000.00",
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
-    "id": "6b268a03697786fc2362"
+    "id": "6b268a03697786fc2362",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
-    "titulo": "TÉCNICO/A EN GESTIÓN III",
+    "titulo": "TÃ‰CNICO/A EN GESTIÃ“N III",
     "entidad": "ORGANISMO DE FORMALIZACION DE LA PROPIEDAD INFORMAL - COFOPRI",
     "ubicacion": "APURIMAC - ABANCAY",
     "departamento": "APURIMAC",
@@ -34,10 +38,12 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/59fe2404a033dee78622.docx",
-    "id": "59fe2404a033dee78622"
+    "id": "59fe2404a033dee78622",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
-    "titulo": "REGISTRADOR PÚBLICO PARA LA OFICINA REGISTRAL DE CERRO DE PASCO",
+    "titulo": "REGISTRADOR PÃšBLICO PARA LA OFICINA REGISTRAL DE CERRO DE PASCO",
     "entidad": "ZONA REGISTRAL NRO. VIII - SEDE HUANCAYO",
     "ubicacion": "PASCO - YANACANCHA",
     "departamento": "PASCO",
@@ -47,7 +53,9 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/cac8d1b9a831d362d724.docx",
-    "id": "cac8d1b9a831d362d724"
+    "id": "cac8d1b9a831d362d724",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "ESPECIALISTA JUDICIAL DE JUZGADO",
@@ -60,7 +68,9 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/8c1c4463b37d5342ff8e.docx",
-    "id": "8c1c4463b37d5342ff8e"
+    "id": "8c1c4463b37d5342ff8e",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "TRABAJADOR DE SERVICIO II",
@@ -73,10 +83,12 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/ce739f030552a2bbafca.docx",
-    "id": "ce739f030552a2bbafca"
+    "id": "ce739f030552a2bbafca",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
-    "titulo": "PROFESIONAL EN PSICOLOGÍA",
+    "titulo": "PROFESIONAL EN PSICOLOGÃA",
     "entidad": "UNIDAD DE GESTION EDUCATIVA LOCAL N. 05",
     "ubicacion": "LIMA - SAN JUAN DE LURIGANCHO",
     "departamento": "LIMA",
@@ -86,7 +98,9 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/1422a3a7d08681d32307.docx",
-    "id": "1422a3a7d08681d32307"
+    "id": "1422a3a7d08681d32307",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "JEFE/A DE LA OFICINA DE PRESUPUESTO",
@@ -99,7 +113,9 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/c779b7779c8db3d4ebd4.docx",
-    "id": "c779b7779c8db3d4ebd4"
+    "id": "c779b7779c8db3d4ebd4",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "SUBGERENTE/A DE SUPERVISION Y LIQUIDACION",
@@ -112,10 +128,12 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/d9304b5f85728ac1c444.docx",
-    "id": "d9304b5f85728ac1c444"
+    "id": "d9304b5f85728ac1c444",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
-    "titulo": "JEFE/A DE LA OFICINA DE PROGRAMACIÓN MULTIANUAL DE INVERSIONES",
+    "titulo": "JEFE/A DE LA OFICINA DE PROGRAMACIÃ“N MULTIANUAL DE INVERSIONES",
     "entidad": "MUNICIPALIDAD DISTRITAL DE SAN ANTONIO",
     "ubicacion": "MOQUEGUA - SAN ANTONIO",
     "departamento": "MOQUEGUA",
@@ -125,7 +143,9 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/fac21decc289ec7638e6.docx",
-    "id": "fac21decc289ec7638e6"
+    "id": "fac21decc289ec7638e6",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "RESPONSABLE DEL AREA TECNICA MUNICIPAL (ATM)",
@@ -138,7 +158,9 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/1969f9f1c295d1dbb08e.docx",
-    "id": "1969f9f1c295d1dbb08e"
+    "id": "1969f9f1c295d1dbb08e",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
   },
   {
     "titulo": "TRABAJADOR SOCIAL",
@@ -151,6 +173,22 @@
     "fecha_inicio": "10/07/2026",
     "fecha_fin": "24/07/2026",
     "archivo_oficial": "documentos_oficiales/f446376bba5d28b4f0df.docx",
-    "id": "f446376bba5d28b4f0df"
+    "id": "f446376bba5d28b4f0df",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
+  },
+  {
+    "titulo": "DOCENTE CONTRATADO DC B1",
+    "entidad": "UNIVERSIDAD NACIONAL JOSÃ‰ MARÃA ARGUEDAS",
+    "ubicacion": "APURIMAC - SAN JERONIMO",
+    "departamento": "APURIMAC",
+    "numero_convocatoria": "DOCENTES UNIVERSITARIOS LEY 30220-02",
+    "vacantes": "1",
+    "remuneracion": "S/. 3,133.00",
+    "fecha_inicio": "22/07/2026",
+    "fecha_fin": "11/08/2026",
+    "fuente": "SERVIR - Talento PerÃº",
+    "url_oficial": "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml",
+    "id": "42b119fdb82621288dfe"
   }
 ]
