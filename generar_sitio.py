@@ -9,6 +9,7 @@ Uso:
 """
 import os
 import json
+import re
 import html
 from empleo_utils import asegurar_id, nombre_archivo_oferta
 from consola import configurar_salida_utf8
@@ -31,6 +32,11 @@ def cargar_empleos():
 def mostrar_remuneracion(valor: str) -> str:
     valor = str(valor or "").strip()
     return valor if valor.upper().startswith("S/.") else f"S/. {valor}"
+
+
+def limpiar_html(contenido: str) -> str:
+    """Evita espacios residuales cuando un bloque opcional queda vacío."""
+    return re.sub(r"[ \t]+(?=\n)", "", contenido)
 
 
 CABECERA = """<!DOCTYPE html>
@@ -69,15 +75,36 @@ PIE = """
 def generar_pagina_detalle(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta.get("remuneracion", ""))
     archivo_oficial = oferta.get("archivo_oficial", "")
-    url_oficial = oferta.get("url_oficial") or FUENTE_URL
+    url_postulacion = oferta.get("url_postulacion", "")
     boton_documento = (
         f'<a class="btn-oficial" href="../{html.escape(archivo_oficial)}" target="_blank" rel="noopener">'
-        'Abrir documento oficial de esta convocatoria →</a>'
+        'Descargar resumen de SERVIR (Word) →</a>'
         if archivo_oficial else ""
     )
-    boton_fuente = (
-        f'<a class="btn-fuente" href="{html.escape(url_oficial, quote=True)}" '
-        'target="_blank" rel="noopener">Ir a la fuente oficial del Estado →</a>'
+    boton_postulacion = (
+        f'<a class="btn-oficial" href="{html.escape(url_postulacion, quote=True)}" '
+        'target="_blank" rel="noopener">Ver bases y postular en la entidad →</a>'
+        if url_postulacion else
+        f'<a class="btn-fuente" href="{FUENTE_URL}" target="_blank" rel="noopener">'
+        'Buscar esta convocatoria en SERVIR →</a>'
+    )
+    aviso_enlace = (
+        'SERVIR proporcionó el siguiente enlace de la entidad. Al abrirlo, busca el número de convocatoria indicado arriba.'
+        if url_postulacion else
+        'SERVIR no proporcionó un enlace específico de la entidad para esta oferta. Usa el número de convocatoria para ubicarla en el listado oficial.'
+    )
+    etiquetas = (
+        ("Requerimiento", "requerimiento"),
+        ("Experiencia", "experiencia"),
+        ("Formación académica", "formacion_academica"),
+        ("Especialización", "especializacion"),
+        ("Conocimientos", "conocimiento"),
+        ("Competencias", "competencias"),
+        ("Detalle publicado por la entidad", "detalle_entidad"),
+    )
+    requisitos = "".join(
+        f'<div class="requisito"><h3>{etiqueta}</h3><p>{html.escape(str(oferta[campo]))}</p></div>'
+        for etiqueta, campo in etiquetas if oferta.get(campo)
     )
     return CABECERA.format(
         titulo=html.escape(f"{oferta['titulo']} — {oferta['entidad']}"),
@@ -97,12 +124,19 @@ def generar_pagina_detalle(oferta: dict) -> str:
         <div><dt>Ubicación</dt><dd>{html.escape(oferta['ubicacion'])}</dd></div>
         <div><dt>Remuneración</dt><dd>{html.escape(remuneracion)}</dd></div>
         <div><dt>Número de convocatoria</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
+        {f'<div><dt>Código SERVIR</dt><dd class="mono">N° {html.escape(str(oferta["codigo_servir"]))}</dd></div>' if oferta.get('codigo_servir') else ''}
         <div><dt>Vigencia</dt><dd>{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}</dd></div>
       </dl>
-      <p class="aviso-oficial">Verifica los requisitos y el cronograma antes de postular.</p>
-      <div class="acciones-oficiales">{boton_documento}{boton_fuente}</div>
+      <div class="guia-postulacion">
+        <strong>Convocatoria que debes buscar:</strong>
+        <span class="numero-destacado">{html.escape(oferta['numero_convocatoria'])}</span>
+        {f'<span class="codigo-servir">Código SERVIR: N° {html.escape(str(oferta["codigo_servir"]))}</span>' if oferta.get('codigo_servir') else ''}
+        <p>{aviso_enlace}</p>
+      </div>
+      <div class="acciones-oficiales">{boton_postulacion}{boton_documento}</div>
     </div>
   </article>
+  {'<section class="requisitos"><h2>Requisitos publicados en SERVIR</h2>' + requisitos + '</section>' if requisitos else ''}
 </main>
 """ + PIE
 
@@ -119,11 +153,15 @@ def generar_index(empleos: list) -> str:
         items = []
         for o in sorted(por_departamento[depto], key=lambda x: x["titulo"]):
             archivo = nombre_archivo_oferta(o)
+            codigo = f" · SERVIR N° {html.escape(str(o['codigo_servir']))}" if o.get("codigo_servir") else ""
+            perfil = str(o.get("formacion_academica", "")).strip()
+            perfil_html = f'<span class="job-profile">{html.escape(perfil)}</span>' if perfil else ""
             items.append(f"""
                 <li>
                     <a href="ofertas/{archivo}" class="job-link">
                         <span class="job-title">{html.escape(o['titulo'])}</span>
-                        <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s)</span>
+                        <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s){codigo}</span>
+                        {perfil_html}
                     </a>
                 </li>""")
         secciones_html.append(f"""
@@ -150,8 +188,8 @@ def ejecutar():
     empleos = cargar_empleos()
     os.makedirs(CARPETA_OFERTAS, exist_ok=True)
 
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(generar_index(empleos))
+    with open("index.html", "w", encoding="utf-8", newline="\n") as f:
+        f.write(limpiar_html(generar_index(empleos)))
     print(f"✅ index.html generado con {len(empleos)} ofertas")
 
     esperados = set()
@@ -160,8 +198,8 @@ def ejecutar():
         archivo = nombre_archivo_oferta(o)
         esperados.add(archivo)
         ruta = os.path.join(CARPETA_OFERTAS, archivo)
-        with open(ruta, "w", encoding="utf-8") as f:
-            f.write(generar_pagina_detalle(o))
+        with open(ruta, "w", encoding="utf-8", newline="\n") as f:
+            f.write(limpiar_html(generar_pagina_detalle(o)))
 
     eliminadas = 0
     for archivo in os.listdir(CARPETA_OFERTAS):
