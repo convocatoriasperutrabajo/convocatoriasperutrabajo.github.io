@@ -52,7 +52,7 @@ def cargar_json(ruta, valor_por_defecto):
 
 
 def guardar_json(ruta, datos):
-    with open(ruta, "w", encoding="utf-8") as f:
+    with open(ruta, "w", encoding="utf-8", newline="\n") as f:
         json.dump(datos, f, ensure_ascii=False, indent=2)
 
 

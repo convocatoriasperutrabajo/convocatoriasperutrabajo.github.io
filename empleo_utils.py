@@ -23,7 +23,19 @@ def id_oferta(oferta: dict) -> str:
         texto_clave(oferta.get("titulo")),
         texto_clave(oferta.get("ubicacion")),
     )
+    if oferta.get("codigo_servir"):
+        partes += (texto_clave(oferta.get("codigo_servir")),)
     return hashlib.sha256("|".join(partes).encode("utf-8")).hexdigest()[:20]
+
+
+def clave_base_oferta(oferta: dict) -> tuple[str, ...]:
+    """Identifica la convocatoria sin el código interno que distingue perfiles."""
+    return (
+        texto_clave(oferta.get("entidad")),
+        texto_clave(oferta.get("numero_convocatoria")),
+        texto_clave(oferta.get("titulo")),
+        texto_clave(oferta.get("ubicacion")),
+    )
 
 
 def asegurar_id(oferta: dict) -> dict:

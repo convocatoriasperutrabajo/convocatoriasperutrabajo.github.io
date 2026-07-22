@@ -28,6 +28,19 @@ def es_url_oficial(url: str) -> bool:
     return any(host == dominio or host.endswith(f".{dominio}") for dominio in DOMINIOS_OFICIALES)
 
 
+def es_url_postulacion_valida(url: str) -> bool:
+    partes = urlparse(url)
+    host = (partes.hostname or "").lower()
+    bloqueados = (
+        "convocatoriasdetrabajo.com",
+        "perutrabajos.com",
+        "empleosperu.gob.pe.fake",
+    )
+    return partes.scheme in {"http", "https"} and bool(host) and not any(
+        host == dominio or host.endswith(f".{dominio}") for dominio in bloqueados
+    )
+
+
 def validar() -> None:
     empleos = json.loads((RAIZ / "empleos.json").read_text(encoding="utf-8"))
     if not empleos:
@@ -49,6 +62,10 @@ def validar() -> None:
         url_oficial = str(oferta.get("url_oficial", ""))
         if url_oficial and not es_url_oficial(url_oficial):
             errores.append(f"oferta {posicion}: fuente no oficial {url_oficial}")
+
+        url_postulacion = str(oferta.get("url_postulacion", ""))
+        if url_postulacion and not es_url_postulacion_valida(url_postulacion):
+            errores.append(f"oferta {posicion}: enlace de postulación inválido {url_postulacion}")
 
         archivo = nombre_archivo_oferta(oferta)
         esperadas.add(archivo)

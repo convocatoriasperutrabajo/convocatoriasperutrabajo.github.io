@@ -81,6 +81,7 @@ a { color: inherit; }
 .job-link { text-decoration: none; display: block; }
 .job-title { display: block; font-weight: 500; font-size: 0.95rem; }
 .job-meta { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+.job-profile { display: block; margin-top: 4px; font-size: 0.78rem; line-height: 1.4; color: var(--ink); }
 .job-link:hover .job-title { color: var(--seal-red); }
 
 /* ---------- Detail page ---------- */
@@ -141,6 +142,21 @@ a { color: inherit; }
   font-weight: 500;
 }
 .btn-fuente:hover { background: #f8efec; }
+.guia-postulacion {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--seal-red);
+  background: var(--paper-dim);
+  font-size: 0.88rem;
+}
+.guia-postulacion p { margin: 8px 0 0; color: var(--ink-soft); }
+.numero-destacado { display: block; margin-top: 5px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
+.codigo-servir { display: block; margin-top: 3px; font-size: 0.8rem; color: var(--ink-soft); }
+.requisitos { margin-top: 20px; background: #fff; border: 1px solid var(--rule); padding: 24px; }
+.requisitos h2 { font-family: 'Fraunces', serif; margin: 0 0 18px; font-size: 1.25rem; }
+.requisito { padding: 12px 0; border-top: 1px solid var(--paper-dim); }
+.requisito h3 { margin: 0 0 5px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--seal-red); }
+.requisito p { margin: 0; line-height: 1.55; }
 
 /* ---------- Empty state ---------- */
 .empty-state { padding: 60px 20px; text-align: center; color: var(--ink-soft); }

@@ -14,6 +14,7 @@ import time
 import argparse
 from datetime import datetime, date
 from pathlib import Path
+from urllib.parse import urlparse
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -23,7 +24,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-from empleo_utils import asegurar_id
+from empleo_utils import asegurar_id, clave_base_oferta
 from consola import configurar_salida_utf8
 
 configurar_salida_utf8()
@@ -102,6 +103,78 @@ def extraer_ofertas_de_texto(texto: str):
     return ofertas
 
 
+SECCIONES_DETALLE = (
+    ("requerimiento", "REQUERIMIENTO:", "EXPERIENCIA:"),
+    ("experiencia", "EXPERIENCIA:", "FORMACIÓN ACADÉMICA - PERFIL:"),
+    ("formacion_academica", "FORMACIÓN ACADÉMICA - PERFIL:", "ESPECIALIZACIÓN:"),
+    ("especializacion", "ESPECIALIZACIÓN:", "CONOCIMIENTO:"),
+    ("conocimiento", "CONOCIMIENTO:", "COMPETENCIAS:"),
+    ("competencias", "COMPETENCIAS:", "DETALLE:"),
+    ("detalle_entidad", "DETALLE:", "CANTIDAD DE VACANTES:"),
+)
+
+
+def extraer_secciones_detalle(texto: str) -> dict:
+    """Extrae los requisitos que SERVIR muestra al abrir «¡Ver más!»."""
+    texto = re.sub(r"\s+", " ", texto).strip()
+    resultado = {}
+    for campo, inicio, fin in SECCIONES_DETALLE:
+        patron = rf"{re.escape(inicio)}\s*(.*?)\s*(?={re.escape(fin)})"
+        coincidencia = re.search(patron, texto, re.IGNORECASE)
+        if coincidencia:
+            valor = coincidencia.group(1).strip(" -")
+            if valor and valor.upper() != "NO APLICA":
+                resultado[campo] = valor
+    return resultado
+
+
+def extraer_detalle_abierto(driver) -> dict:
+    """Lee requisitos y el enlace declarado por la entidad en la ficha abierta."""
+    formulario = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.ID, "frmDetaOferLabo"))
+    )
+    resultado = extraer_secciones_detalle(formulario.text)
+    codigo = re.search(r"\bN[°º]\s*(\d{4,})\b", formulario.text, re.IGNORECASE)
+    if codigo:
+        resultado["codigo_servir"] = codigo.group(1)
+
+    for enlace in formulario.find_elements(By.CSS_SELECTOR, "a[href]"):
+        href = (enlace.get_attribute("href") or "").strip()
+        partes = urlparse(href)
+        host = (partes.hostname or "").lower()
+        if partes.scheme in {"http", "https"} and host and not host.endswith("servir.gob.pe"):
+            resultado["url_postulacion"] = href
+            break
+
+    return resultado
+
+
+def enriquecer_ofertas_pagina(driver, ofertas: list[dict]) -> None:
+    """Visita la ficha temporal de SERVIR de cada oferta y vuelve al listado."""
+    for indice, oferta in enumerate(ofertas):
+        WebDriverWait(driver, 20).until(
+            lambda d: len(d.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")) > indice
+        )
+        botones = driver.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")
+        try:
+            driver.execute_script("arguments[0].click()", botones[indice])
+            WebDriverWait(driver, 20).until(
+                lambda d: "detalle_ofertas_laborales.xhtml" in d.current_url
+            )
+            oferta.update(extraer_detalle_abierto(driver))
+            if oferta.get("url_postulacion"):
+                print(f"   Enlace de entidad: {oferta['url_postulacion']}")
+            else:
+                print(f"   Sin enlace específico: {oferta['titulo']}")
+        finally:
+            if "detalle_ofertas_laborales.xhtml" in driver.current_url:
+                driver.back()
+                WebDriverWait(driver, 20).until(
+                    lambda d: "ofertas_laborales.xhtml" in d.current_url
+                    and len(d.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")) > indice
+                )
+
+
 def obtener_numero_pagina_actual(driver):
     try:
         texto = driver.find_element(By.XPATH, "//*[contains(text(),'Página') and contains(text(),'de')]").text
@@ -152,7 +225,7 @@ def cargar_empleos_existentes():
 def guardar_empleos(diccionario_por_numero):
     lista = list(diccionario_por_numero.values())
     # Más recientes primero (por fecha de inicio de publicación cuando se pueda comparar)
-    with open(EMPLEOS_JSON, "w", encoding="utf-8") as f:
+    with open(EMPLEOS_JSON, "w", encoding="utf-8", newline="\n") as f:
         json.dump(lista, f, ensure_ascii=False, indent=2)
 
 
@@ -172,6 +245,23 @@ def retirar_ofertas_vencidas(empleos: dict, hoy: date | None = None) -> int:
     for identificador in vencidas:
         empleos.pop(identificador, None)
     return len(vencidas)
+
+
+def retirar_duplicados_sin_codigo(empleos: dict) -> int:
+    """Elimina el registro antiguo si ya existen perfiles con código SERVIR."""
+    bases_con_codigo = {
+        clave_base_oferta(oferta)
+        for oferta in empleos.values()
+        if oferta.get("codigo_servir")
+    }
+    duplicados = [
+        identificador
+        for identificador, oferta in empleos.items()
+        if not oferta.get("codigo_servir") and clave_base_oferta(oferta) in bases_con_codigo
+    ]
+    for identificador in duplicados:
+        empleos.pop(identificador, None)
+    return len(duplicados)
 
 
 def esperar_descarga(archivos_antes: set[Path], timeout_segundos: int = 45):
@@ -285,6 +375,8 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
                     "SERVIR no devolvió convocatorias. El portal pudo cambiar o bloquear la consulta."
                 )
 
+            enriquecer_ofertas_pagina(driver, ofertas)
+
             documentos_descargados += descargar_documentos_pagina(
                 driver, ofertas, empleos, max_documentos - documentos_descargados
             )
@@ -294,8 +386,13 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
             for oferta in ofertas:
                 oferta = asegurar_id(oferta)
                 anterior = empleos.get(oferta["id"], {})
-                if "archivo_oficial" in anterior and "archivo_oficial" not in oferta:
-                    oferta["archivo_oficial"] = anterior["archivo_oficial"]
+                for campo in (
+                    "archivo_oficial", "url_postulacion", "requerimiento", "experiencia",
+                    "formacion_academica", "especializacion", "conocimiento",
+                    "competencias", "detalle_entidad",
+                ):
+                    if campo in anterior and campo not in oferta:
+                        oferta[campo] = anterior[campo]
                 empleos[oferta["id"]] = oferta
 
             if max_paginas and pagina_actual >= max_paginas:
@@ -321,6 +418,7 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
     finally:
         driver.quit()
 
+    duplicados_retirados = retirar_duplicados_sin_codigo(empleos)
     ofertas_vencidas = retirar_ofertas_vencidas(empleos)
     guardar_empleos(empleos)
 
@@ -333,6 +431,8 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
     print(f"Total acumulado en empleos.json: {len(empleos)}")
     if ofertas_vencidas:
         print(f"Ofertas vencidas retiradas:      {ofertas_vencidas}")
+    if duplicados_retirados:
+        print(f"Registros antiguos combinados:  {duplicados_retirados}")
     print("===========================================")
 
 
