@@ -1,22 +1,22 @@
 """
 facebook_poster.py
-Publica en tu Página de Facebook las ofertas de empleos.json que aún no
+Publica en tu PÃ¡gina de Facebook las ofertas de empleos.json que aÃºn no
 se hayan publicado (registro en publicados_facebook.json).
 
-Configuración (variables de entorno o archivo .env):
+ConfiguraciÃ³n (variables de entorno o archivo .env):
     FB_PAGE_ID
     FB_PAGE_ACCESS_TOKEN
 
 Uso:
     python facebook_poster.py --dry-run       -> solo muestra, no publica
-    python facebook_poster.py --limite 5      -> publica máximo 5
+    python facebook_poster.py --limite 5      -> publica mÃ¡ximo 5
 """
 import os
 import json
 import time
 import argparse
 import requests
-from empleo_utils import asegurar_id
+from empleo_utils import asegurar_id, nombre_archivo_oferta
 from consola import configurar_salida_utf8
 
 configurar_salida_utf8()
@@ -25,6 +25,7 @@ EMPLEOS_JSON = "empleos.json"
 PUBLICADOS_JSON = "publicados_facebook.json"
 GRAPH_API_VERSION = "v25.0"
 FUENTE_URL = "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
+SITIO_URL = os.environ.get("SITIO_URL", "https://convocatoriasperutrabajo.github.io").rstrip("/")
 
 
 def cargar_configuracion():
@@ -62,16 +63,17 @@ def mostrar_remuneracion(valor: str) -> str:
 
 def formatear_mensaje(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta["remuneracion"])
+    ficha_url = f"{SITIO_URL}/ofertas/{nombre_archivo_oferta(oferta)}"
     return (
-        f"📢 NUEVA CONVOCATORIA\n\n"
-        f"🔹 {oferta['titulo']}\n"
-        f"🏢 {oferta['entidad']}\n"
-        f"📍 {oferta['ubicacion']}\n"
-        f"💰 Remuneración: {remuneracion}\n"
-        f"👥 Vacantes: {oferta['vacantes']}\n"
-        f"📅 Publicación: {oferta['fecha_inicio']} — Cierre: {oferta['fecha_fin']}\n\n"
-        f"Más info y postulación en el portal oficial de SERVIR - Talento Perú:\n"
-        f"{FUENTE_URL}\n\n"
+        f"ðŸ“¢ NUEVA CONVOCATORIA\n\n"
+        f"ðŸ”¹ {oferta['titulo']}\n"
+        f"ðŸ¢ {oferta['entidad']}\n"
+        f"ðŸ“ {oferta['ubicacion']}\n"
+        f"ðŸ’° RemuneraciÃ³n: {remuneracion}\n"
+        f"ðŸ‘¥ Vacantes: {oferta['vacantes']}\n"
+        f"ðŸ“… PublicaciÃ³n: {oferta['fecha_inicio']} â€” Cierre: {oferta['fecha_fin']}\n\n"
+        f"Consulta la ficha, el documento oficial y el acceso a SERVIR:\n"
+        f"{ficha_url}\n\n"
         f"#TrabajoPeru #Convocatoria #EmpleoPublico"
     )
 
@@ -89,7 +91,7 @@ def ejecutar_publicador(limite: int = 20, dry_run: bool = False, pausa_segundos:
     empleos = cargar_json(EMPLEOS_JSON, [])
     publicados = set(cargar_json(PUBLICADOS_JSON, []))
 
-    # Compatibilidad: versiones anteriores guardaban solo el número de
+    # Compatibilidad: versiones anteriores guardaban solo el nÃºmero de
     # convocatoria. Se respeta ese registro para no republicar al migrar.
     pendientes = [
         asegurar_id(o) for o in empleos
@@ -111,22 +113,27 @@ def ejecutar_publicador(limite: int = 20, dry_run: bool = False, pausa_segundos:
 
     page_id, token = cargar_configuracion()
 
+    errores = []
     for i, oferta in enumerate(pendientes, start=1):
         mensaje = formatear_mensaje(oferta)
         try:
             resultado = publicar_en_facebook(page_id, token, mensaje)
             publicados.add(oferta["id"])
             guardar_json(PUBLICADOS_JSON, sorted(publicados))  # guarda progreso tras cada post
-            print(f"[{i}/{len(pendientes)}] ✅ Publicado: {oferta['titulo']} (post id: {resultado.get('id')})")
+            print(f"[{i}/{len(pendientes)}] âœ… Publicado: {oferta['titulo']} (post id: {resultado.get('id')})")
         except Exception as e:
-            print(f"[{i}/{len(pendientes)}] ❌ Error publicando '{oferta['titulo']}': {e}")
+            print(f"[{i}/{len(pendientes)}] âŒ Error publicando '{oferta['titulo']}': {e}")
+            errores.append(oferta["id"])
 
         if i < len(pendientes):
             time.sleep(pausa_segundos)
 
+    if errores:
+        raise RuntimeError(f"Facebook rechazÃ³ {len(errores)} publicaciÃ³n(es)")
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Publica ofertas pendientes en la Página de Facebook")
+    parser = argparse.ArgumentParser(description="Publica ofertas pendientes en la PÃ¡gina de Facebook")
     parser.add_argument("--limite", type=int, default=20)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--pausa", type=float, default=20)

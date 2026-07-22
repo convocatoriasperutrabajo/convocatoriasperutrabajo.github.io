@@ -128,6 +128,19 @@ a { color: inherit; }
   font-weight: 500;
 }
 .btn-oficial:hover { background: #8a2c22; }
+.aviso-oficial { margin: 0 0 12px; color: var(--ink-soft); font-size: 0.82rem; }
+.acciones-oficiales { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn-fuente {
+  display: inline-block;
+  border: 1px solid var(--seal-red);
+  color: var(--seal-red);
+  text-decoration: none;
+  padding: 10px 17px;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.btn-fuente:hover { background: #f8efec; }
 
 /* ---------- Empty state ---------- */
 .empty-state { padding: 60px 20px; text-align: center; color: var(--ink-soft); }
