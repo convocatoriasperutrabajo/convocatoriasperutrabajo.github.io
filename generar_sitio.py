@@ -224,22 +224,33 @@ def opciones_filtro(valores: set[str], etiqueta: str) -> str:
 
 
 def generar_index(empleos: list) -> str:
-    por_departamento = {}
+    por_distrito = {}
     departamentos, provincias, distritos = set(), set(), set()
     for original in empleos:
         o = asegurar_id(original)
         depto, provincia, distrito = ubicacion_desglosada(o)
-        por_departamento.setdefault(depto, []).append(o)
+        nombre_distrito = distrito or provincia or depto
+        por_distrito.setdefault(nombre_distrito, []).append(o)
         departamentos.add(depto)
         provincias.add(provincia)
         distritos.add(distrito)
 
     secciones_html = []
-    for depto in sorted(por_departamento.keys()):
+    orden_distritos = {
+        "MALA": 0,
+        "CHILCA": 1,
+        "ASIA": 2,
+        "SAN VICENTE DE CAÑETE": 3,
+    }
+    for nombre_distrito in sorted(
+        por_distrito,
+        key=lambda nombre: (orden_distritos.get(nombre, 99), nombre),
+    ):
         items = []
-        for o in sorted(por_departamento[depto], key=lambda x: x["titulo"]):
+        ofertas_distrito = por_distrito[nombre_distrito]
+        for o in sorted(ofertas_distrito, key=lambda x: x["titulo"]):
             archivo = nombre_archivo_oferta(o)
-            _, provincia, distrito = ubicacion_desglosada(o)
+            depto, provincia, distrito = ubicacion_desglosada(o)
             codigo = f" · SERVIR N° {html.escape(str(o['codigo_servir']))}" if o.get("codigo_servir") else ""
             perfil = str(o.get("formacion_academica", "")).strip()
             perfil_html = f'<span class="job-profile">{html.escape(perfil)}</span>' if perfil else ""
@@ -253,7 +264,7 @@ def generar_index(empleos: list) -> str:
                 </li>""")
         secciones_html.append(f"""
         <section class="dep-section">
-            <h2>📍 {html.escape(depto)}</h2>
+            <h2>📍 {html.escape(nombre_distrito)} <span class="district-count">{len(ofertas_distrito)} ofertas</span></h2>
             <ul class="job-list">{''.join(items)}</ul>
         </section>""")
 
