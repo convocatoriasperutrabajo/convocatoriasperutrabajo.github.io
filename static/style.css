@@ -41,7 +41,6 @@ a { color: inherit; }
   align-items: center;
   gap: 18px;
 }
-.masthead-mark-link { text-decoration: none; }
 .masthead-mark {
   align-items: center;
   background: rgba(255, 255, 255, 0.13);
@@ -49,9 +48,12 @@ a { color: inherit; }
   border-radius: 12px;
   color: #fff;
   display: inline-flex;
-  font-size: 22px;
+  flex: 0 0 44px;
+  font-size: 0.82rem;
+  font-weight: 800;
   height: 44px;
   justify-content: center;
+  letter-spacing: 0.04em;
   width: 44px;
 }
 .masthead-text h1 {

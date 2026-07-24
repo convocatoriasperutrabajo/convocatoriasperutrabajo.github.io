@@ -67,9 +67,9 @@ CABECERA = """<!DOCTYPE html>
 <body>
 <header class="masthead">
   <div class="masthead-inner">
-    <a href="{ruta_css}index.html" class="masthead-mark-link"><span class="masthead-mark">☰</span></a>
+    <span class="masthead-mark" aria-hidden="true">CP</span>
     <div class="masthead-text">
-      <h1><a href="{ruta_css}index.html">Empleos en Cañete</a></h1>
+      <h1><a href="{ruta_css}?v={version_js}">Empleos en Cañete</a></h1>
       <p class="masthead-sub">Ofertas de los 16 distritos de Cañete · enlaces directos al aviso original</p>
     </div>
   </div>
