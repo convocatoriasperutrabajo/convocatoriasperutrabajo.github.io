@@ -86,6 +86,22 @@ class ProyectoTests(unittest.TestCase):
         self.assertEqual(con_enlace.count("Postular en la institución"), 1)
         self.assertIn("https://entidad.gob.pe/convocatoria", con_enlace)
 
+    def test_distingue_consulta_general_de_postulacion_directa(self):
+        oferta = {
+            **OFERTA,
+            "vacantes": "1",
+            "remuneracion": "3,000",
+            "fecha_inicio": "22/07/2026",
+            "fecha_fin": "31/07/2026",
+            "codigo_servir": "798049",
+            "url_consulta": "https://share.google/IovzweaQemtlVGF9i",
+        }
+        pagina = generar_pagina_detalle(oferta)
+        self.assertNotIn("Postular en la institución", pagina)
+        self.assertIn("Buscar en el portal de la institución", pagina)
+        self.assertIn("apps.diresamdd.gob.pe", pagina)
+        self.assertIn("798049", pagina)
+
     def test_extrae_requisitos_del_detalle_de_servir(self):
         texto = (
             "REQUERIMIENTO: Título profesional EXPERIENCIA: Cinco años "

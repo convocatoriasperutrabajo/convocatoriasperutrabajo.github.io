@@ -76,6 +76,7 @@ PIE = """
 def generar_pagina_detalle(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta.get("remuneracion", ""))
     url_postulacion = oferta.get("url_postulacion", "")
+    url_consulta = oferta.get("url_consulta", "")
     documentos = []
     for enlace in oferta.get("enlaces_bases", []):
         if not isinstance(enlace, dict) or not enlace.get("url"):
@@ -92,19 +93,37 @@ def generar_pagina_detalle(oferta: dict) -> str:
     )
     aviso_enlace = (
         'El botón rojo abre la web oficial de la institución para que realices tu postulación.'
-        if url_postulacion else
+        if url_postulacion else (
+        'La institución no publicó una dirección exacta para esta oferta. El botón gris abre su sección oficial de convocatorias. '
+        'Busca allí el título y el número indicados en esta ficha.'
+        if url_consulta else
         'La institución todavía no publicó un enlace directo para esta oferta. '
-        'Revisa aquí los requisitos y el número de convocatoria; no te enviaremos a un listado general.'
+        'Revisa aquí los requisitos y el número de convocatoria.'
+        )
     )
     accion_postulacion = (
         f'<div class="acciones-oficiales">{boton_postulacion}</div>'
-        if boton_postulacion else
+        if boton_postulacion else (
+        f'<div class="acciones-oficiales"><a class="btn-consulta" href="{html.escape(url_consulta, quote=True)}" '
+        'target="_blank" rel="noopener noreferrer">Buscar en el portal de la institución →</a></div>'
+        if url_consulta else
         '<p class="sin-enlace-directo">Aún no hay un enlace directo de postulación publicado por la institución.</p>'
+        )
+    )
+    aviso_certificado = (
+        '<aside class="aviso-certificado" role="note"><strong>Aviso del portal DIRESA Madre de Dios</strong>'
+        '<p>Su web oficial presenta un problema de certificado y el navegador puede mostrar una advertencia. '
+        'Comprueba que la dirección sea <code>apps.diresamdd.gob.pe</code> antes de continuar. '
+        'No ingreses contraseñas ni datos bancarios.</p></aside>'
+        if "share.google/IovzweaQemtlVGF9i" in url_consulta else ""
     )
     ultimo_paso = (
         'Presiona el botón rojo para continuar en la web oficial de la institución.'
-        if url_postulacion else
+        if url_postulacion else (
+        f'Abre el portal oficial y busca “{html.escape(oferta["titulo"])}” o el código SERVIR N° {html.escape(str(oferta.get("codigo_servir", "")))}.'
+        if url_consulta else
         'Conserva el número de convocatoria y revisa los canales oficiales de la institución.'
+        )
     )
     etiquetas = (
         ("Requerimiento", "requerimiento"),
@@ -141,6 +160,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
       <li>{ultimo_paso}</li>
     </ol>
     <p>No necesitas crear una cuenta en esta página para revisar la convocatoria.</p>
+    {aviso_certificado}
     {accion_postulacion}
   </section>"""
     return CABECERA.format(

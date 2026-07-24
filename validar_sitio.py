@@ -70,6 +70,10 @@ def validar() -> None:
         ):
             errores.append(f"oferta {posicion}: el enlace no abre una postulación específica {url_postulacion}")
 
+        url_consulta = str(oferta.get("url_consulta", ""))
+        if url_consulta and not es_url_postulacion_valida(url_consulta):
+            errores.append(f"oferta {posicion}: enlace de consulta inválido {url_consulta}")
+
         enlaces_bases = oferta.get("enlaces_bases", [])
         if enlaces_bases and not isinstance(enlaces_bases, list):
             errores.append(f"oferta {posicion}: enlaces_bases debe ser una lista")
