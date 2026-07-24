@@ -62,6 +62,26 @@ class ProyectoTests(unittest.TestCase):
         self.assertNotIn("Talento Perú (Word)", pagina)
         self.assertIn("https://entidad.gob.pe/bases.pdf", pagina)
 
+    def test_solo_muestra_un_boton_si_hay_enlace_directo(self):
+        datos = {
+            **OFERTA,
+            "vacantes": "1",
+            "remuneracion": "3,000",
+            "fecha_inicio": "22/07/2026",
+            "fecha_fin": "31/07/2026",
+        }
+        sin_enlace = generar_pagina_detalle(datos)
+        self.assertNotIn('class="btn-fuente"', sin_enlace)
+        self.assertNotIn("Ver esta convocatoria en SERVIR", sin_enlace)
+        self.assertIn("no te enviaremos a un listado general", sin_enlace)
+
+        con_enlace = generar_pagina_detalle({
+            **datos,
+            "url_postulacion": "https://entidad.gob.pe/convocatoria",
+        })
+        self.assertEqual(con_enlace.count("Postular en la institución"), 1)
+        self.assertIn("https://entidad.gob.pe/convocatoria", con_enlace)
+
     def test_extrae_requisitos_del_detalle_de_servir(self):
         texto = (
             "REQUERIMIENTO: Título profesional EXPERIENCIA: Cinco años "

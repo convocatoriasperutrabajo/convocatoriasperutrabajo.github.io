@@ -88,14 +88,23 @@ def generar_pagina_detalle(oferta: dict) -> str:
     boton_postulacion = (
         f'<a class="btn-oficial" href="{html.escape(url_postulacion, quote=True)}" '
         'target="_blank" rel="noopener noreferrer">Postular en la institución →</a>'
-        if url_postulacion else
-        f'<a class="btn-fuente" href="{FUENTE_URL}" target="_blank" rel="noopener">'
-        'Ver esta convocatoria en SERVIR →</a>'
+        if url_postulacion else ""
     )
     aviso_enlace = (
         'El botón rojo abre la web oficial de la institución para que realices tu postulación.'
         if url_postulacion else
-        'SERVIR aún no muestra un enlace directo de la entidad. El botón abre la ficha oficial de SERVIR.'
+        'La institución todavía no publicó un enlace directo para esta oferta. '
+        'Revisa aquí los requisitos y el número de convocatoria; no te enviaremos a un listado general.'
+    )
+    accion_postulacion = (
+        f'<div class="acciones-oficiales">{boton_postulacion}</div>'
+        if boton_postulacion else
+        '<p class="sin-enlace-directo">Aún no hay un enlace directo de postulación publicado por la institución.</p>'
+    )
+    ultimo_paso = (
+        'Presiona el botón rojo para continuar en la web oficial de la institución.'
+        if url_postulacion else
+        'Conserva el número de convocatoria y revisa los canales oficiales de la institución.'
     )
     etiquetas = (
         ("Requerimiento", "requerimiento"),
@@ -121,7 +130,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
         f'<ul class="lista-documentos">{"".join(documentos)}</ul></section>'
         if documentos else
         '<section class="documentos" id="documentos"><h2>Bases, anexos y documentos oficiales</h2>'
-        '<p>La fuente oficial no entregó un archivo de bases para esta oferta. Usa el botón de postulación para revisarlos en la institución.</p></section>'
+        '<p>La fuente oficial no entregó un archivo de bases para esta oferta. Revisa los canales oficiales de la institución antes de postular.</p></section>'
     )
     pasos_html = f"""
   <section class="pasos-postulacion" id="como-postular">
@@ -129,10 +138,10 @@ def generar_pagina_detalle(oferta: dict) -> str:
     <ol>
       <li>Lee los requisitos y revisa los documentos oficiales de esta página.</li>
       <li>Ten listos tu DNI, CV y anexos que la entidad solicite.</li>
-      <li>Presiona el botón rojo para continuar en la web oficial.</li>
+      <li>{ultimo_paso}</li>
     </ol>
     <p>No necesitas crear una cuenta en esta página para revisar la convocatoria.</p>
-    <div class="acciones-oficiales">{boton_postulacion}</div>
+    {accion_postulacion}
   </section>"""
     return CABECERA.format(
         titulo=html.escape(f"{oferta['titulo']} — {oferta['entidad']}"),
@@ -166,7 +175,6 @@ def generar_pagina_detalle(oferta: dict) -> str:
         {f'<span class="codigo-servir">Código SERVIR: N° {html.escape(str(oferta["codigo_servir"]))}</span>' if oferta.get('codigo_servir') else ''}
         <p>{aviso_enlace}</p>
       </div>
-      <div class="acciones-oficiales">{boton_postulacion}</div>
     </div>
   </article>
   {requisitos_html}

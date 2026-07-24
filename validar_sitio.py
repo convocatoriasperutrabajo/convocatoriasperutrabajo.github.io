@@ -84,6 +84,8 @@ def validar() -> None:
             contenido_ficha = ficha.read_text(encoding="utf-8")
             if "../documentos_oficiales/" in contenido_ficha or "Talento Perú (Word)" in contenido_ficha:
                 errores.append(f"oferta {posicion}: la ficha todavía publica un aviso Word sin información útil")
+            if 'class="btn-fuente"' in contenido_ficha or "Ver esta convocatoria en SERVIR" in contenido_ficha:
+                errores.append(f"oferta {posicion}: la ficha envía al listado general de SERVIR")
 
         documento = oferta.get("archivo_oficial")
         if documento and not (RAIZ / documento).exists():
