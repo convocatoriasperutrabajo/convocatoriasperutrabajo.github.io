@@ -80,6 +80,10 @@ def validar() -> None:
         ficha = RAIZ / "ofertas" / archivo
         if not ficha.exists():
             errores.append(f"oferta {posicion}: no existe {ficha.relative_to(RAIZ)}")
+        else:
+            contenido_ficha = ficha.read_text(encoding="utf-8")
+            if "../documentos_oficiales/" in contenido_ficha or "Talento Perú (Word)" in contenido_ficha:
+                errores.append(f"oferta {posicion}: la ficha todavía publica un aviso Word sin información útil")
 
         documento = oferta.get("archivo_oficial")
         if documento and not (RAIZ / documento).exists():

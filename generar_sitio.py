@@ -75,7 +75,6 @@ PIE = """
 
 def generar_pagina_detalle(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta.get("remuneracion", ""))
-    archivo_oficial = oferta.get("archivo_oficial", "")
     url_postulacion = oferta.get("url_postulacion", "")
     documentos = []
     for enlace in oferta.get("enlaces_bases", []):
@@ -86,12 +85,6 @@ def generar_pagina_detalle(oferta: dict) -> str:
             f'<li><a href="{html.escape(str(enlace["url"]), quote=True)}" target="_blank" '
             f'rel="noopener noreferrer">{html.escape(titulo)} ↗</a></li>'
         )
-    if archivo_oficial:
-        documentos.append(
-            f'<li><a href="../{html.escape(archivo_oficial, quote=True)}" target="_blank" rel="noopener">'
-            'Ver aviso original de Talento Perú (Word) ↗</a></li>'
-        )
-
     boton_postulacion = (
         f'<a class="btn-oficial" href="{html.escape(url_postulacion, quote=True)}" '
         'target="_blank" rel="noopener noreferrer">Postular en la institución →</a>'
