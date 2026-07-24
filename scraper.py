@@ -167,6 +167,8 @@ def extraer_detalle_abierto(driver) -> dict:
             })
         elif es_enlace_postulacion_directo(href) and not resultado.get("url_postulacion"):
             resultado["url_postulacion"] = href
+        elif not resultado.get("url_consulta"):
+            resultado["url_consulta"] = href
     if enlaces_bases:
         resultado["enlaces_bases"] = enlaces_bases
 
@@ -426,7 +428,7 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
                 oferta = asegurar_id(oferta)
                 anterior = empleos.get(oferta["id"], {})
                 for campo in (
-                    "archivo_oficial", "url_postulacion", "requerimiento", "experiencia",
+                    "archivo_oficial", "url_postulacion", "url_consulta", "requerimiento", "experiencia",
                     "formacion_academica", "especializacion", "conocimiento",
                     "competencias", "detalle_entidad", "enlaces_bases",
                 ):
