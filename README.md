@@ -1,10 +1,10 @@
 # Convocatorias de Trabajo
 
-Sitio estático que difunde únicamente convocatorias obtenidas del portal oficial Talento Perú (SERVIR). No consume avisos de bolsas de trabajo ni de páginas agregadoras. Cada ficha conserva el documento de la convocatoria cuando está disponible y enlaza a la fuente oficial del Estado.
+Sitio estático que difunde únicamente convocatorias obtenidas del portal oficial Talento Perú (SERVIR). No consume avisos de bolsas de trabajo ni de páginas agregadoras. Cada ficha muestra requisitos legibles, documentos oficiales disponibles y un botón separado para postular directamente en la institución.
 
 ## Actualización automática
 
-GitHub Actions ejecuta diariamente `scraper.py`, regenera el sitio y publica solo las convocatorias no publicadas antes en Facebook. La lista se conserva en `empleos.json`; cada convocatoria recibe un identificador estable basado en entidad, número, puesto y ubicación, por lo que no se mezclan números repetidos de entidades distintas. También conserva el Word oficial de las convocatorias nuevas, para que cada ficha tenga una descarga directa.
+GitHub Actions ejecuta diariamente `scraper.py`, regenera el sitio y publica solo las convocatorias no publicadas antes en Facebook. La lista se conserva en `empleos.json`; cada convocatoria recibe un identificador estable basado en entidad, número, puesto y ubicación, por lo que no se mezclan números repetidos de entidades distintas. El actualizador abre la ficha de SERVIR, conserva sus requisitos y, cuando SERVIR muestra enlaces de bases/anexos, los publica en la ficha.
 
 Antes de guardar cambios, `validar_sitio.py` comprueba que no haya IDs duplicados, fichas faltantes, documentos rotos ni enlaces a dominios ajenos al Estado.
 
@@ -12,7 +12,7 @@ Antes de guardar cambios, `validar_sitio.py` comprueba que no haya IDs duplicado
 
 ```powershell
 pip install -r requirements.txt
-python scraper.py --max-paginas 2
+python scraper.py --max-paginas 2 --max-documentos 0
 python generar_sitio.py
 python facebook_poster.py --dry-run
 ```

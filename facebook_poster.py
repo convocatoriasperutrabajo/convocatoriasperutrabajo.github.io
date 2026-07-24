@@ -16,6 +16,7 @@ import json
 import time
 import argparse
 import requests
+from datetime import date, datetime
 from empleo_utils import asegurar_id, nombre_archivo_oferta
 from consola import configurar_salida_utf8
 
@@ -61,9 +62,28 @@ def mostrar_remuneracion(valor: str) -> str:
     return valor if valor.upper().startswith("S/.") else f"S/. {valor}"
 
 
+def fecha_de_texto(valor: str):
+    try:
+        return datetime.strptime(str(valor or ""), "%d/%m/%Y").date()
+    except ValueError:
+        return None
+
+
+def sigue_vigente(oferta: dict) -> bool:
+    fecha_fin = fecha_de_texto(oferta.get("fecha_fin", ""))
+    return fecha_fin is None or fecha_fin >= date.today()
+
+
 def formatear_mensaje(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta["remuneracion"])
     ficha_url = f"{SITIO_URL}/ofertas/{nombre_archivo_oferta(oferta)}"
+    enlace_postulacion = oferta.get("url_postulacion")
+    llamada_a_la_accion = (
+        f"Postula directamente en el enlace oficial:\n{enlace_postulacion}\n\n"
+        f"Requisitos, bases y resumen:\n{ficha_url}"
+        if enlace_postulacion else
+        f"Requisitos y enlace de postulación:\n{ficha_url}"
+    )
     return (
         f"📢 NUEVA CONVOCATORIA\n\n"
         f"🔹 {oferta['titulo']}\n"
@@ -72,8 +92,7 @@ def formatear_mensaje(oferta: dict) -> str:
         f"💰 Remuneración: {remuneracion}\n"
         f"👥 Vacantes: {oferta['vacantes']}\n"
         f"📅 Publicación: {oferta['fecha_inicio']} — Cierre: {oferta['fecha_fin']}\n\n"
-        f"Consulta la ficha, el documento oficial y el acceso a SERVIR:\n"
-        f"{ficha_url}\n\n"
+        f"{llamada_a_la_accion}\n\n"
         f"#TrabajoPeru #Convocatoria #EmpleoPublico"
     )
 
@@ -93,11 +112,16 @@ def ejecutar_publicador(limite: int = 20, dry_run: bool = False, pausa_segundos:
 
     # Compatibilidad: versiones anteriores guardaban solo el número de
     # convocatoria. Se respeta ese registro para no republicar al migrar.
-    pendientes = [
-        asegurar_id(o) for o in empleos
-        if asegurar_id(o)["id"] not in publicados
-        and o.get("numero_convocatoria") not in publicados
-    ][:limite]
+    pendientes = sorted(
+        (
+            asegurar_id(o) for o in empleos
+            if asegurar_id(o)["id"] not in publicados
+            and o.get("numero_convocatoria") not in publicados
+            and sigue_vigente(o)
+        ),
+        key=lambda oferta: fecha_de_texto(oferta.get("fecha_inicio", "")) or date.min,
+        reverse=True,
+    )[:limite]
 
     if not pendientes:
         print("No hay ofertas pendientes de publicar.")

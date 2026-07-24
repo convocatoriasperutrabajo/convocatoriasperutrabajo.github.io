@@ -40,6 +40,9 @@ jobs:
       - name: Generar sitio estático
         run: python generar_sitio.py
 
+      - name: Validar datos y fichas generadas
+        run: python validar_sitio.py
+
       - name: Publicar ofertas nuevas en Facebook
         env:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}

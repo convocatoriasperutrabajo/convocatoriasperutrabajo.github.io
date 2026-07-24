@@ -49,6 +49,7 @@ CABECERA = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{ruta_css}static/style.css">
+<script defer src="{ruta_css}static/filtros.js"></script>
 </head>
 <body>
 <header class="masthead">
@@ -76,22 +77,32 @@ def generar_pagina_detalle(oferta: dict) -> str:
     remuneracion = mostrar_remuneracion(oferta.get("remuneracion", ""))
     archivo_oficial = oferta.get("archivo_oficial", "")
     url_postulacion = oferta.get("url_postulacion", "")
-    boton_documento = (
-        f'<a class="btn-oficial" href="../{html.escape(archivo_oficial)}" target="_blank" rel="noopener">'
-        'Descargar resumen de SERVIR (Word) →</a>'
-        if archivo_oficial else ""
-    )
+    documentos = []
+    for enlace in oferta.get("enlaces_bases", []):
+        if not isinstance(enlace, dict) or not enlace.get("url"):
+            continue
+        titulo = str(enlace.get("titulo") or "Descargar bases o anexo oficial")
+        documentos.append(
+            f'<li><a href="{html.escape(str(enlace["url"]), quote=True)}" target="_blank" '
+            f'rel="noopener noreferrer">{html.escape(titulo)} ↗</a></li>'
+        )
+    if archivo_oficial:
+        documentos.append(
+            f'<li><a href="../{html.escape(archivo_oficial, quote=True)}" target="_blank" rel="noopener">'
+            'Ver aviso original de Talento Perú (Word) ↗</a></li>'
+        )
+
     boton_postulacion = (
         f'<a class="btn-oficial" href="{html.escape(url_postulacion, quote=True)}" '
-        'target="_blank" rel="noopener">Ver bases y postular en la entidad →</a>'
+        'target="_blank" rel="noopener noreferrer">Postular en la institución →</a>'
         if url_postulacion else
         f'<a class="btn-fuente" href="{FUENTE_URL}" target="_blank" rel="noopener">'
-        'Buscar esta convocatoria en SERVIR →</a>'
+        'Ver esta convocatoria en SERVIR →</a>'
     )
     aviso_enlace = (
-        'SERVIR proporcionó el siguiente enlace de la entidad. Al abrirlo, busca el número de convocatoria indicado arriba.'
+        'El botón rojo abre la web oficial de la institución para que realices tu postulación.'
         if url_postulacion else
-        'SERVIR no proporcionó un enlace específico de la entidad para esta oferta. Usa el número de convocatoria para ubicarla en el listado oficial.'
+        'SERVIR aún no muestra un enlace directo de la entidad. El botón abre la ficha oficial de SERVIR.'
     )
     etiquetas = (
         ("Requerimiento", "requerimiento"),
@@ -106,12 +117,41 @@ def generar_pagina_detalle(oferta: dict) -> str:
         f'<div class="requisito"><h3>{etiqueta}</h3><p>{html.escape(str(oferta[campo]))}</p></div>'
         for etiqueta, campo in etiquetas if oferta.get(campo)
     )
+    requisitos_html = (
+        f'<section class="requisitos" id="requisitos"><h2>Requisitos que debes cumplir</h2>{requisitos}</section>'
+        if requisitos else
+        '<section class="requisitos" id="requisitos"><h2>Requisitos que debes cumplir</h2>'
+        '<p>La ficha oficial todavía no muestra el detalle de requisitos. Revisa las bases o la página de la institución antes de postular.</p></section>'
+    )
+    documentos_html = (
+        '<section class="documentos" id="documentos"><h2>Bases, anexos y documentos oficiales</h2>'
+        f'<ul class="lista-documentos">{"".join(documentos)}</ul></section>'
+        if documentos else
+        '<section class="documentos" id="documentos"><h2>Bases, anexos y documentos oficiales</h2>'
+        '<p>La fuente oficial no entregó un archivo de bases para esta oferta. Usa el botón de postulación para revisarlos en la institución.</p></section>'
+    )
+    pasos_html = f"""
+  <section class="pasos-postulacion" id="como-postular">
+    <h2>Cómo postular</h2>
+    <ol>
+      <li>Lee los requisitos y revisa los documentos oficiales de esta página.</li>
+      <li>Ten listos tu DNI, CV y anexos que la entidad solicite.</li>
+      <li>Presiona el botón rojo para continuar en la web oficial.</li>
+    </ol>
+    <p>No necesitas crear una cuenta en esta página para revisar la convocatoria.</p>
+    <div class="acciones-oficiales">{boton_postulacion}</div>
+  </section>"""
     return CABECERA.format(
         titulo=html.escape(f"{oferta['titulo']} — {oferta['entidad']}"),
         descripcion=html.escape(f"{oferta['titulo']} en {oferta['ubicacion']}. {oferta['vacantes']} vacante(s)."),
         ruta_css="../",
     ) + f"""
 <main class="detalle">
+  <nav class="navegacion-ficha" aria-label="Contenido de la convocatoria">
+    <a href="#requisitos">Requisitos</a>
+    <a href="#documentos">Bases y anexos</a>
+    <a href="#como-postular">Cómo postular</a>
+  </nav>
   <article class="notice notice-detalle">
     <div class="notice-seal">
       <span class="seal-number">{html.escape(oferta['vacantes'])}</span>
@@ -128,36 +168,61 @@ def generar_pagina_detalle(oferta: dict) -> str:
         <div><dt>Vigencia</dt><dd>{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}</dd></div>
       </dl>
       <div class="guia-postulacion">
-        <strong>Convocatoria que debes buscar:</strong>
-        <span class="numero-destacado">{html.escape(oferta['numero_convocatoria'])}</span>
+        <strong>Antes de postular</strong>
+        <span class="numero-destacado">Convocatoria: {html.escape(oferta['numero_convocatoria'])}</span>
         {f'<span class="codigo-servir">Código SERVIR: N° {html.escape(str(oferta["codigo_servir"]))}</span>' if oferta.get('codigo_servir') else ''}
         <p>{aviso_enlace}</p>
       </div>
-      <div class="acciones-oficiales">{boton_postulacion}{boton_documento}</div>
+      <div class="acciones-oficiales">{boton_postulacion}</div>
     </div>
   </article>
-  {'<section class="requisitos"><h2>Requisitos publicados en SERVIR</h2>' + requisitos + '</section>' if requisitos else ''}
+  {requisitos_html}
+  {documentos_html}
+  {pasos_html}
 </main>
 """ + PIE
 
 
+def ubicacion_desglosada(oferta: dict) -> tuple[str, str, str]:
+    """Obtiene departamento, provincia/localidad y distrito si la fuente lo informa."""
+    partes = [parte.strip() for parte in str(oferta.get("ubicacion", "")).split("-") if parte.strip()]
+    departamento = str(oferta.get("departamento") or (partes[0] if partes else "Sin región especificada"))
+    provincia = str(oferta.get("provincia") or (partes[1] if len(partes) > 1 else ""))
+    distrito = str(oferta.get("distrito") or (partes[2] if len(partes) > 2 else ""))
+    return departamento, provincia, distrito
+
+
+def opciones_filtro(valores: set[str], etiqueta: str) -> str:
+    opciones = [f'<option value="">{etiqueta}</option>']
+    opciones.extend(
+        f'<option value="{html.escape(valor, quote=True)}">{html.escape(valor)}</option>'
+        for valor in sorted(valor for valor in valores if valor)
+    )
+    return "".join(opciones)
+
+
 def generar_index(empleos: list) -> str:
     por_departamento = {}
+    departamentos, provincias, distritos = set(), set(), set()
     for original in empleos:
         o = asegurar_id(original)
-        depto = o.get("departamento") or "Sin región especificada"
+        depto, provincia, distrito = ubicacion_desglosada(o)
         por_departamento.setdefault(depto, []).append(o)
+        departamentos.add(depto)
+        provincias.add(provincia)
+        distritos.add(distrito)
 
     secciones_html = []
     for depto in sorted(por_departamento.keys()):
         items = []
         for o in sorted(por_departamento[depto], key=lambda x: x["titulo"]):
             archivo = nombre_archivo_oferta(o)
+            _, provincia, distrito = ubicacion_desglosada(o)
             codigo = f" · SERVIR N° {html.escape(str(o['codigo_servir']))}" if o.get("codigo_servir") else ""
             perfil = str(o.get("formacion_academica", "")).strip()
             perfil_html = f'<span class="job-profile">{html.escape(perfil)}</span>' if perfil else ""
             items.append(f"""
-                <li>
+                <li class="job-item" data-departamento="{html.escape(depto, quote=True)}" data-provincia="{html.escape(provincia, quote=True)}" data-distrito="{html.escape(distrito, quote=True)}">
                     <a href="ofertas/{archivo}" class="job-link">
                         <span class="job-title">{html.escape(o['titulo'])}</span>
                         <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s){codigo}</span>
@@ -176,8 +241,19 @@ def generar_index(empleos: list) -> str:
         ruta_css="",
     ) + f"""
 <main class="layout-index">
-  <p class="total-ofertas">{len(empleos)} ofertas registradas actualmente.</p>
+  <section class="buscador-ubicacion" aria-labelledby="titulo-buscador">
+    <h2 id="titulo-buscador">Encuentra empleo cerca de ti</h2>
+    <p>Elige tu ubicación. No necesitas saber el nombre de la entidad.</p>
+    <div class="controles-ubicacion">
+      <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento">{opciones_filtro(departamentos, 'Todo el Perú')}</select></div>
+      <div class="filtro-control"><label for="filtro-provincia">Provincia o localidad</label><select id="filtro-provincia">{opciones_filtro(provincias, 'Todas las provincias')}</select></div>
+      <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(distritos, 'Todos los distritos')}</select></div>
+    </div>
+    <button type="button" class="limpiar-filtros" id="limpiar-filtros">Ver todas las ofertas</button>
+  </section>
+  <p class="total-ofertas" id="contador-resultados" aria-live="polite">{len(empleos)} ofertas registradas actualmente.</p>
   {''.join(secciones_html) if secciones_html else '<p class="empty-state">Todavía no hay ofertas cargadas. Corre scraper.py primero.</p>'}
+  <p class="empty-state resultados-vacios" id="resultados-vacios" hidden>No encontramos ofertas para esa ubicación. Prueba con otro departamento o mira todas las ofertas.</p>
 </main>
 """ + PIE
 

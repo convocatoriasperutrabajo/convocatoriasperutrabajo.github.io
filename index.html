@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="static/style.css">
+<script defer src="static/filtros.js"></script>
 </head>
 <body>
 <header class="masthead">
@@ -21,82 +22,92 @@
 </header>
 
 <main class="layout-index">
-  <p class="total-ofertas">22 ofertas registradas actualmente.</p>
+  <section class="buscador-ubicacion" aria-labelledby="titulo-buscador">
+    <h2 id="titulo-buscador">Encuentra empleo cerca de ti</h2>
+    <p>Elige tu ubicación. No necesitas saber el nombre de la entidad.</p>
+    <div class="controles-ubicacion">
+      <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento"><option value="">Todo el Perú</option><option value="APURIMAC">APURIMAC</option><option value="AYACUCHO">AYACUCHO</option><option value="HUANCAVELICA">HUANCAVELICA</option><option value="LIMA">LIMA</option><option value="MADRE DE DIOS">MADRE DE DIOS</option><option value="MOQUEGUA">MOQUEGUA</option><option value="PASCO">PASCO</option><option value="PIURA">PIURA</option></select></div>
+      <div class="filtro-control"><label for="filtro-provincia">Provincia o localidad</label><select id="filtro-provincia"><option value="">Todas las provincias</option><option value="ABANCAY">ABANCAY</option><option value="ACOS VINCHOS">ACOS VINCHOS</option><option value="ANDABAMBA">ANDABAMBA</option><option value="ANDRES AVELINO CACERES DORREGARAY">ANDRES AVELINO CACERES DORREGARAY</option><option value="CASTROVIRREYNA">CASTROVIRREYNA</option><option value="CORACORA">CORACORA</option><option value="INAMBARI">INAMBARI</option><option value="SAN ANTONIO">SAN ANTONIO</option><option value="SAN JERONIMO">SAN JERONIMO</option><option value="SAN JUAN DE LURIGANCHO">SAN JUAN DE LURIGANCHO</option><option value="SECHURA">SECHURA</option><option value="TAMBOPATA">TAMBOPATA</option><option value="YANACANCHA">YANACANCHA</option></select></div>
+      <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito"><option value="">Todos los distritos</option></select></div>
+    </div>
+    <button type="button" class="limpiar-filtros" id="limpiar-filtros">Ver todas las ofertas</button>
+  </section>
+  <p class="total-ofertas" id="contador-resultados" aria-live="polite">32 ofertas registradas actualmente.</p>
 
         <section class="dep-section">
             <h2>📍 APURIMAC</h2>
             <ul class="job-list">
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/dcaef654865d53e35d17-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797812</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE LICENCIADO EN EDUCACIÓN PRIMARIA</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/036639f11a131a4b80f5-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797849</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE INGENIERO DE SISTEMAS O ESPECIALIDADES DEL CAPÍTULO DE SISTEMAS, COMPUTACIÓN E INFORMÁTICA DEL COLEGIO DE INGENIEROS DEL PERÚ.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/8e1f8a8ddea2dce06aa2-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797850</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE INGENIERO DE SISTEMAS O ESPECIALIDADES DEL CAPÍTULO DE SISTEMAS, COMPUTACIÓN E INFORMÁTICA DEL COLEGIO DE INGENIEROS DEL PERÚ</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/ddfd0622615022169a15-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797856</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE INGENIERO CIVIL.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/b6701254349e339df03b-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797848</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE INGENIERO AGROINDUSTRIAL.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/5916fa710973c3b1e8bd-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797846</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE INGENIERO AGROINDUSTRIAL</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/eb95b0b313234a0f7dcb-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797839</span>
                         <span class="job-profile">TÍTULO PROFESIONAL LICENCIADO EN ANTROPOLOGÍA O LICENCIADO EN HISTORIA O LICENCIADO EN EDUCACIÓN CON ESPECIALIDAD EN CIENCIAS SOCIALES O LICENCIADO EN EDUCACIÓN CON ESPECIALIDAD EN FILOSOFÍA Y CIENCIAS SOCIALES.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/c8651d54e2f8ab069371-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797836</span>
                         <span class="job-profile">TÍTULO PROFESIONAL LICENCIADO EN ANTROPOLOGÍA O LICENCIADO EN EDUCACIÓN CON ESPECIALIDAD EN LENGUA Y LITERATURA O LICENCIADO EN FILOSOFÍA O LICENCIADO EN EDUCACIÓN CON ESPECIALIDAD EN FILOSOFÍA Y CIENCIAS SOCIALES.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/a7a37fdec8acc7116154-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797833</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE LICENCIADO EN HISTORIA O LICENCIADO EN SOCIOLOGÍA O LICENCIADO EN ANTROPOLOGÍA O LICENCIADO EN FILOSOFÍA.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="SAN JERONIMO" data-distrito="">
                     <a href="ofertas/f5bbcf1b9ee5260a9245-docente-contratado-dc-b1.html" class="job-link">
                         <span class="job-title">DOCENTE CONTRATADO DC B1</span>
                         <span class="job-meta">UNIVERSIDAD NACIONAL JOSÉ MARÍA ARGUEDAS · 1 vacante(s) · SERVIR N° 797843</span>
                         <span class="job-profile">TÍTULO PROFESIONAL DE CONTADOR PÚBLICO.</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="APURIMAC" data-provincia="ABANCAY" data-distrito="">
                     <a href="ofertas/59fe2404a033dee78622-tecnico-a-en-gestion-iii.html" class="job-link">
                         <span class="job-title">TÉCNICO/A EN GESTIÓN III</span>
                         <span class="job-meta">ORGANISMO DE FORMALIZACION DE LA PROPIEDAD INFORMAL - COFOPRI · 1 vacante(s)</span>
@@ -107,62 +118,67 @@
         <section class="dep-section">
             <h2>📍 AYACUCHO</h2>
             <ul class="job-list">
-                <li>
-                    <a href="ofertas/d5b6e4c495d340f7dd47-dos-02-personales-obrero-para-segregaci-n-segregador.html" class="job-link">
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="ANDRES AVELINO CACERES DORREGARAY" data-distrito="">
+                    <a href="ofertas/21dea0940fe4aacfb9cc-dos-02-personales-obrero-para-segregacion-segregador.html" class="job-link">
                         <span class="job-title">DOS (02) PERSONALES OBRERO PARA SEGREGACIÓN (SEGREGADOR)</span>
-                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 2 vacante(s)</span>
+                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 2 vacante(s) · SERVIR N° 797980</span>
+                        <span class="job-profile">PRIMARIA COMPLETA. (ACREDITAR CON COPIA DE CERTIFICADO DE ESTUDIOS).</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/1020930bd121862b7dd0-dos-02-t-cnicos-en-seguridad-por-suplencia.html" class="job-link">
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="ANDRES AVELINO CACERES DORREGARAY" data-distrito="">
+                    <a href="ofertas/11123e0ecb7661a538b7-dos-02-tecnicos-en-seguridad-por-suplencia.html" class="job-link">
                         <span class="job-title">DOS (02) TÉCNICOS EN SEGURIDAD (POR SUPLENCIA)</span>
-                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 2 vacante(s)</span>
+                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 2 vacante(s) · SERVIR N° 797986</span>
+                        <span class="job-profile">SECUNDARIA COMPLETA. (ACREDITAR CON COPIA DE CERTIFICADO DE ESTUDIOS)</span>
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="ACOS VINCHOS" data-distrito="">
                     <a href="ofertas/1969f9f1c295d1dbb08e-responsable-del-area-tecnica-municipal-atm.html" class="job-link">
                         <span class="job-title">RESPONSABLE DEL AREA TECNICA MUNICIPAL (ATM)</span>
                         <span class="job-meta">MUNICIPALIDAD DISTRITAL DE ACOS VINCHOS · 1 vacante(s)</span>
 
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="CORACORA" data-distrito="">
                     <a href="ofertas/f446376bba5d28b4f0df-trabajador-social.html" class="job-link">
                         <span class="job-title">TRABAJADOR SOCIAL</span>
                         <span class="job-meta">REGION AYACUCHO SALUD SARASARA · 2 vacante(s)</span>
 
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/c7ca3bd8ceb28e44e095-un-01-inspector-de-transporte.html" class="job-link">
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="ANDRES AVELINO CACERES DORREGARAY" data-distrito="">
+                    <a href="ofertas/a5482ee8c8d33cddd3b6-un-01-inspector-de-transporte.html" class="job-link">
                         <span class="job-title">UN (01) INSPECTOR DE TRANSPORTE</span>
-                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 1 vacante(s)</span>
+                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 1 vacante(s) · SERVIR N° 797989</span>
+                        <span class="job-profile">SECUNDARIA COMPLETA. (ACREDITAR CON COPIA DE CERTIFICADO DE ESTUDIOS)</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/56f429ab5b8cfa08d158-un-01-personal-de-limpieza-p-blica-barrido-de-calles.html" class="job-link">
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="ANDRES AVELINO CACERES DORREGARAY" data-distrito="">
+                    <a href="ofertas/99c7d0b5704a9c6d61b5-un-01-personal-de-limpieza-publica-barrido-de-calles.html" class="job-link">
                         <span class="job-title">UN (01) PERSONAL DE LIMPIEZA PÚBLICA (BARRIDO DE CALLES).</span>
-                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 1 vacante(s)</span>
+                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 1 vacante(s) · SERVIR N° 797981</span>
+                        <span class="job-profile">PRIMARIA COMPLETA. (ACREDITAR CON COPIA DE CERTIFICADO DE ESTUDIOS)</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/bb91849f31bf34e5bc11-un-01-personal-de-limpieza-p-blica-residuos-s-lidos.html" class="job-link">
+                <li class="job-item" data-departamento="AYACUCHO" data-provincia="ANDRES AVELINO CACERES DORREGARAY" data-distrito="">
+                    <a href="ofertas/d365b6c99901812ffd4d-un-01-personal-de-limpieza-publica-residuos-solidos.html" class="job-link">
                         <span class="job-title">UN (01) PERSONAL DE LIMPIEZA PÚBLICA (RESIDUOS SÓLIDOS).</span>
-                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 1 vacante(s)</span>
+                        <span class="job-meta">MUNICIPALIDAD DISTRITAL DE  ANDRES AVELINO CACERES DORREGARAY · 1 vacante(s) · SERVIR N° 797982</span>
+                        <span class="job-profile">PRIMARIA COMPLETA. (ACREDITAR CON COPIA DE CERTIFICADO DE ESTUDIOS)</span>
                     </a>
                 </li></ul>
         </section>
         <section class="dep-section">
             <h2>📍 HUANCAVELICA</h2>
             <ul class="job-list">
-                <li>
+                <li class="job-item" data-departamento="HUANCAVELICA" data-provincia="ANDABAMBA" data-distrito="">
                     <a href="ofertas/115f393b55bd730e600e-psicologo-a.html" class="job-link">
                         <span class="job-title">PSICOLOGO (A)</span>
                         <span class="job-meta">UNIDAD DE GESTIÓN EDUCATIVA LOCAL ACOBAMBA · 1 vacante(s)</span>
 
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="HUANCAVELICA" data-provincia="CASTROVIRREYNA" data-distrito="">
                     <a href="ofertas/6b268a03697786fc2362-trabajador-a-social.html" class="job-link">
                         <span class="job-title">TRABAJADOR(A) SOCIAL</span>
                         <span class="job-meta">PROGRAMA INTEGRAL NACIONAL PARA EL BIENESTAR FAMILIAR - INABIF · 1 vacante(s)</span>
@@ -173,14 +189,14 @@
         <section class="dep-section">
             <h2>📍 LIMA</h2>
             <ul class="job-list">
-                <li>
+                <li class="job-item" data-departamento="LIMA" data-provincia="SAN JUAN DE LURIGANCHO" data-distrito="">
                     <a href="ofertas/1422a3a7d08681d32307-profesional-en-psicologia.html" class="job-link">
                         <span class="job-title">PROFESIONAL EN PSICOLOGÍA</span>
                         <span class="job-meta">UNIDAD DE GESTION EDUCATIVA LOCAL N. 05 · 1 vacante(s)</span>
 
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="LIMA" data-provincia="SAN JUAN DE LURIGANCHO" data-distrito="">
                     <a href="ofertas/ce739f030552a2bbafca-trabajador-de-servicio-ii.html" class="job-link">
                         <span class="job-title">TRABAJADOR DE SERVICIO II</span>
                         <span class="job-meta">UNIDAD DE GESTION EDUCATIVA LOCAL N. 05 · 1 vacante(s)</span>
@@ -191,55 +207,60 @@
         <section class="dep-section">
             <h2>📍 MADRE DE DIOS</h2>
             <ul class="job-list">
-                <li>
-                    <a href="ofertas/21fb59c5748fdf95eeba-conductor-de-ambulancia.html" class="job-link">
+                <li class="job-item" data-departamento="MADRE DE DIOS" data-provincia="INAMBARI" data-distrito="">
+                    <a href="ofertas/603b6ea390bf772f3afd-conductor-de-ambulancia.html" class="job-link">
                         <span class="job-title">CONDUCTOR DE AMBULANCIA</span>
-                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s)</span>
+                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s) · SERVIR N° 798049</span>
+                        <span class="job-profile">SECUNDARIA COMPLETA</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/8813427fd39aa7538662-digitador.html" class="job-link">
+                <li class="job-item" data-departamento="MADRE DE DIOS" data-provincia="TAMBOPATA" data-distrito="">
+                    <a href="ofertas/c0b6d962eb0eecbd1678-digitador.html" class="job-link">
                         <span class="job-title">DIGITADOR</span>
-                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s)</span>
+                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s) · SERVIR N° 798048</span>
+                        <span class="job-profile">TITULADO EN LA CARRERA TÉCNICA DE INFORMATICA Y/O MINIMO 6 SEMESTRES DE ESTUDIOS UNIVERSITARIOS EN CARRERAS AFINES</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/9d7a90079ea4f7e3cb53-medico-itinerante.html" class="job-link">
+                <li class="job-item" data-departamento="MADRE DE DIOS" data-provincia="INAMBARI" data-distrito="">
+                    <a href="ofertas/3021b21c604b8b0aa5a9-medico-itinerante.html" class="job-link">
                         <span class="job-title">MEDICO/ITINERANTE</span>
-                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s)</span>
+                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s) · SERVIR N° 798024</span>
+                        <span class="job-profile">TITULADO EN LA CARRERA UNIVERSITARIA DE MEDICINA HUMANA</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/edbafc1ba06ea8886c9e-nutricionista.html" class="job-link">
+                <li class="job-item" data-departamento="MADRE DE DIOS" data-provincia="INAMBARI" data-distrito="">
+                    <a href="ofertas/85468dc308cdf20681cf-nutricionista.html" class="job-link">
                         <span class="job-title">NUTRICIONISTA</span>
-                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s)</span>
+                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s) · SERVIR N° 798031</span>
+                        <span class="job-profile">TITULADO EN LA CARRERA UNIVERSITARIA EN NUTRICION</span>
                     </a>
                 </li>
-                <li>
-                    <a href="ofertas/74fb10a7bc42a534380c-tecnico-en-enfermer-a.html" class="job-link">
+                <li class="job-item" data-departamento="MADRE DE DIOS" data-provincia="INAMBARI" data-distrito="">
+                    <a href="ofertas/14f47f06572876b04207-tecnico-en-enfermeria.html" class="job-link">
                         <span class="job-title">TECNICO EN ENFERMERÍA</span>
-                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s)</span>
+                        <span class="job-meta">DIRECC. REGIONAL DE SALUD MADRE DE DIOS · 1 vacante(s) · SERVIR N° 798042</span>
+                        <span class="job-profile">TITULADO EN LA CARRERA TÉCNICA EN ENFERMERIA</span>
                     </a>
                 </li></ul>
         </section>
         <section class="dep-section">
             <h2>📍 MOQUEGUA</h2>
             <ul class="job-list">
-                <li>
+                <li class="job-item" data-departamento="MOQUEGUA" data-provincia="SAN ANTONIO" data-distrito="">
                     <a href="ofertas/c779b7779c8db3d4ebd4-jefe-a-de-la-oficina-de-presupuesto.html" class="job-link">
                         <span class="job-title">JEFE/A DE LA OFICINA DE PRESUPUESTO</span>
                         <span class="job-meta">MUNICIPALIDAD DISTRITAL DE SAN ANTONIO · 1 vacante(s)</span>
 
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="MOQUEGUA" data-provincia="SAN ANTONIO" data-distrito="">
                     <a href="ofertas/fac21decc289ec7638e6-jefe-a-de-la-oficina-de-programacion-multianual-de-inversio.html" class="job-link">
                         <span class="job-title">JEFE/A DE LA OFICINA DE PROGRAMACIÓN MULTIANUAL DE INVERSIONES</span>
                         <span class="job-meta">MUNICIPALIDAD DISTRITAL DE SAN ANTONIO · 1 vacante(s)</span>
 
                     </a>
                 </li>
-                <li>
+                <li class="job-item" data-departamento="MOQUEGUA" data-provincia="SAN ANTONIO" data-distrito="">
                     <a href="ofertas/d9304b5f85728ac1c444-subgerente-a-de-supervision-y-liquidacion.html" class="job-link">
                         <span class="job-title">SUBGERENTE/A DE SUPERVISION Y LIQUIDACION</span>
                         <span class="job-meta">MUNICIPALIDAD DISTRITAL DE SAN ANTONIO · 1 vacante(s)</span>
@@ -250,7 +271,7 @@
         <section class="dep-section">
             <h2>📍 PASCO</h2>
             <ul class="job-list">
-                <li>
+                <li class="job-item" data-departamento="PASCO" data-provincia="YANACANCHA" data-distrito="">
                     <a href="ofertas/cac8d1b9a831d362d724-registrador-publico-para-la-oficina-registral-de-cerro-de-p.html" class="job-link">
                         <span class="job-title">REGISTRADOR PÚBLICO PARA LA OFICINA REGISTRAL DE CERRO DE PASCO</span>
                         <span class="job-meta">ZONA REGISTRAL NRO. VIII - SEDE HUANCAYO · 1 vacante(s)</span>
@@ -261,7 +282,7 @@
         <section class="dep-section">
             <h2>📍 PIURA</h2>
             <ul class="job-list">
-                <li>
+                <li class="job-item" data-departamento="PIURA" data-provincia="SECHURA" data-distrito="">
                     <a href="ofertas/8c1c4463b37d5342ff8e-especialista-judicial-de-juzgado.html" class="job-link">
                         <span class="job-title">ESPECIALISTA JUDICIAL DE JUZGADO</span>
                         <span class="job-meta">CORTE SUPERIOR DE JUSTICIA DE PIURA · 1 vacante(s)</span>
@@ -269,6 +290,7 @@
                     </a>
                 </li></ul>
         </section>
+  <p class="empty-state resultados-vacios" id="resultados-vacios" hidden>No encontramos ofertas para esa ubicación. Prueba con otro departamento o mira todas las ofertas.</p>
 </main>
 
 <footer class="colophon">

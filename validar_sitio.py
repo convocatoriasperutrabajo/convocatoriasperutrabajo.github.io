@@ -67,6 +67,14 @@ def validar() -> None:
         if url_postulacion and not es_url_postulacion_valida(url_postulacion):
             errores.append(f"oferta {posicion}: enlace de postulación inválido {url_postulacion}")
 
+        enlaces_bases = oferta.get("enlaces_bases", [])
+        if enlaces_bases and not isinstance(enlaces_bases, list):
+            errores.append(f"oferta {posicion}: enlaces_bases debe ser una lista")
+        for enlace in enlaces_bases if isinstance(enlaces_bases, list) else []:
+            url_base = str(enlace.get("url", "")) if isinstance(enlace, dict) else ""
+            if not url_base or not es_url_postulacion_valida(url_base):
+                errores.append(f"oferta {posicion}: enlace de bases inválido {url_base}")
+
         archivo = nombre_archivo_oferta(oferta)
         esperadas.add(archivo)
         ficha = RAIZ / "ofertas" / archivo

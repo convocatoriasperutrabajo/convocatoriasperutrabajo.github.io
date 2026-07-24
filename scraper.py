@@ -81,13 +81,18 @@ def extraer_ofertas_de_texto(texto: str):
             return re.sub(r'\s+', ' ', m.group(1)).strip() if m else ""
 
         ubicacion_completa = limpio(ubicacion_match)
-        departamento = ubicacion_completa.split(" - ")[0].strip() if " - " in ubicacion_completa else ubicacion_completa
+        partes_ubicacion = [parte.strip() for parte in ubicacion_completa.split(" - ") if parte.strip()]
+        departamento = partes_ubicacion[0] if partes_ubicacion else ubicacion_completa
+        provincia = partes_ubicacion[1] if len(partes_ubicacion) > 1 else ""
+        distrito = partes_ubicacion[2] if len(partes_ubicacion) > 2 else ""
 
         oferta = {
             "titulo": titulo,
             "entidad": entidad,
             "ubicacion": ubicacion_completa,
             "departamento": departamento,
+            "provincia": provincia,
+            "distrito": distrito,
             "numero_convocatoria": limpio(convocatoria_match),
             "vacantes": limpio(vacantes_match),
             "remuneracion": limpio(remuneracion_match),
@@ -128,6 +133,15 @@ def extraer_secciones_detalle(texto: str) -> dict:
     return resultado
 
 
+def es_enlace_de_bases(url: str, texto: str) -> bool:
+    """Reconoce documentos o enlaces que la entidad nombra como bases/anexos."""
+    texto_enlace = f"{url} {texto}".lower()
+    return bool(
+        re.search(r"\.(pdf|doc|docx|xls|xlsx)(?:$|[?#])", texto_enlace)
+        or any(palabra in texto_enlace for palabra in ("base", "anexo", "cronograma"))
+    )
+
+
 def extraer_detalle_abierto(driver) -> dict:
     """Lee requisitos y el enlace declarado por la entidad en la ficha abierta."""
     formulario = WebDriverWait(driver, 20).until(
@@ -138,26 +152,55 @@ def extraer_detalle_abierto(driver) -> dict:
     if codigo:
         resultado["codigo_servir"] = codigo.group(1)
 
+    enlaces_bases = []
     for enlace in formulario.find_elements(By.CSS_SELECTOR, "a[href]"):
         href = (enlace.get_attribute("href") or "").strip()
+        texto_enlace = (enlace.text or "").strip()
         partes = urlparse(href)
         host = (partes.hostname or "").lower()
-        if partes.scheme in {"http", "https"} and host and not host.endswith("servir.gob.pe"):
+        if partes.scheme not in {"http", "https"} or not host or host.endswith("servir.gob.pe"):
+            continue
+        if es_enlace_de_bases(href, texto_enlace):
+            enlaces_bases.append({
+                "titulo": texto_enlace or "Descargar bases o anexo oficial",
+                "url": href,
+            })
+        elif not resultado.get("url_postulacion"):
             resultado["url_postulacion"] = href
-            break
+    if enlaces_bases:
+        resultado["enlaces_bases"] = enlaces_bases
 
     return resultado
 
 
-def enriquecer_ofertas_pagina(driver, ofertas: list[dict]) -> None:
-    """Visita la ficha temporal de SERVIR de cada oferta y vuelve al listado."""
+def volver_al_listado(driver, numero_pagina: int) -> None:
+    """Recarga el listado oficial y restaura la pagina que se estaba leyendo.
+
+    SERVIR puede dejar una capa de carga activa si se usa el historial para
+    volver desde una ficha. Recargar el listado evita interactuar con esa capa
+    y mantiene la navegacion normal del portal.
+    """
+    driver.get(URL)
+    WebDriverWait(driver, 25).until(
+        lambda d: len(d.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")) > 0
+    )
+    for _ in range(1, numero_pagina):
+        if not hacer_click_siguiente(driver):
+            raise RuntimeError(f"No se pudo restaurar la pagina {numero_pagina} de SERVIR")
+
+
+def enriquecer_ofertas_pagina(driver, ofertas: list[dict], numero_pagina: int) -> None:
+    """Visita cada ficha para leer requisitos y enlaces oficiales de la entidad."""
     for indice, oferta in enumerate(ofertas):
         WebDriverWait(driver, 20).until(
             lambda d: len(d.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")) > indice
         )
         botones = driver.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")
         try:
-            driver.execute_script("arguments[0].click()", botones[indice])
+            boton = botones[indice]
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", boton)
+            WebDriverWait(driver, 15).until(EC.element_to_be_clickable(boton))
+            boton.click()
             WebDriverWait(driver, 20).until(
                 lambda d: "detalle_ofertas_laborales.xhtml" in d.current_url
             )
@@ -168,11 +211,7 @@ def enriquecer_ofertas_pagina(driver, ofertas: list[dict]) -> None:
                 print(f"   Sin enlace específico: {oferta['titulo']}")
         finally:
             if "detalle_ofertas_laborales.xhtml" in driver.current_url:
-                driver.back()
-                WebDriverWait(driver, 20).until(
-                    lambda d: "ofertas_laborales.xhtml" in d.current_url
-                    and len(d.find_elements(By.CSS_SELECTOR, "button[title*='Ver m']")) > indice
-                )
+                volver_al_listado(driver, numero_pagina)
 
 
 def obtener_numero_pagina_actual(driver):
@@ -347,7 +386,7 @@ def descargar_documentos_pagina(driver, ofertas: list[dict], empleos: dict, rest
 
 
 def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segundos: float = 1.5,
-                     max_documentos: int = 20):
+                     max_documentos: int = 0):
     empleos = cargar_empleos_existentes()
     total_antes = len(empleos)
     CARPETA_DOCUMENTOS.mkdir(exist_ok=True)
@@ -375,11 +414,7 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
                     "SERVIR no devolvió convocatorias. El portal pudo cambiar o bloquear la consulta."
                 )
 
-            enriquecer_ofertas_pagina(driver, ofertas)
-
-            enlaces_obtenidos += obtener_enlaces_postulacion_pagina(
-                driver, ofertas, empleos, max_enlaces - enlaces_obtenidos, pagina_actual
-            )
+            enriquecer_ofertas_pagina(driver, ofertas, pagina_actual)
 
             documentos_descargados += descargar_documentos_pagina(
                 driver, ofertas, empleos, max_documentos - documentos_descargados
@@ -393,7 +428,7 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
                 for campo in (
                     "archivo_oficial", "url_postulacion", "requerimiento", "experiencia",
                     "formacion_academica", "especializacion", "conocimiento",
-                    "competencias", "detalle_entidad",
+                    "competencias", "detalle_entidad", "enlaces_bases",
                 ):
                     if campo in anterior and campo not in oferta:
                         oferta[campo] = anterior[campo]
@@ -444,7 +479,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scraper de Talento Perú (SERVIR)")
     parser.add_argument("--max-paginas", type=int, default=None)
     parser.add_argument("--visible", action="store_true")
-    parser.add_argument("--max-documentos", type=int, default=20,
+    parser.add_argument("--max-documentos", type=int, default=0,
                         help="máximo de Word oficiales a bajar por ejecución (0 = ninguno)")
     parser.add_argument("--normalizar-documentos", action="store_true",
                         help="corrige extensiones temporales de Word y termina")
