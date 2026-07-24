@@ -16,13 +16,14 @@ OFERTA = {
 
 
 class ProyectoTests(unittest.TestCase):
-    def test_lima_y_canete_son_fijos_y_distrito_es_desplegable(self):
+    def test_ubicacion_fija_y_distrito_desplegable(self):
         pagina = generar_index([])
-        self.assertIn('value="Lima" readonly', pagina)
-        self.assertIn('value="Cañete" readonly', pagina)
+        self.assertIn('class="location-lock">📍 Lima · Cañete</span>', pagina)
         self.assertNotIn('id="filtro-departamento"', pagina)
         self.assertNotIn('id="filtro-provincia"', pagina)
         self.assertIn('<select id="filtro-distrito">', pagina)
+        self.assertIn('static/filtros.js?v=', pagina)
+        self.assertIn('data-seccion-distrito="MALA" hidden', pagina)
 
     def test_id_y_nombre_de_ficha_son_estables(self):
         primera = asegurar_id(OFERTA)

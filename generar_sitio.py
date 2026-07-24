@@ -11,6 +11,7 @@ import os
 import json
 import re
 import html
+import hashlib
 from empleo_utils import asegurar_id, nombre_archivo_oferta
 from config_canete import DISTRITOS_CANETE
 from consola import configurar_salida_utf8
@@ -21,6 +22,15 @@ EMPLEOS_JSON = "empleos.json"
 CARPETA_OFERTAS = "ofertas"
 
 FUENTE_URL = "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
+
+
+def version_asset(ruta: str) -> str:
+    """Cambia la URL del recurso cuando cambia su contenido y evita caché antigua."""
+    try:
+        with open(ruta, "rb") as archivo:
+            return hashlib.sha256(archivo.read()).hexdigest()[:10]
+    except OSError:
+        return "1"
 
 
 def cargar_empleos():
@@ -51,8 +61,8 @@ CABECERA = """<!DOCTYPE html>
 <meta name="description" content="{descripcion}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{ruta_css}static/style.css">
-<script defer src="{ruta_css}static/filtros.js"></script>
+<link rel="stylesheet" href="{ruta_css}static/style.css?v={version_css}">
+<script defer src="{ruta_css}static/filtros.js?v={version_js}"></script>
 </head>
 <body>
 <header class="masthead">
@@ -170,6 +180,8 @@ def generar_pagina_detalle(oferta: dict) -> str:
         titulo=html.escape(f"{oferta['titulo']} — {oferta['entidad']}"),
         descripcion=html.escape(f"{oferta['titulo']} en {oferta['ubicacion']}. {oferta['vacantes']} vacante(s)."),
         ruta_css="../",
+        version_css=version_asset("static/style.css"),
+        version_js=version_asset("static/filtros.js"),
     ) + f"""
 <main class="detalle">
   <nav class="navegacion-ficha" aria-label="Contenido de la convocatoria">
@@ -254,7 +266,7 @@ def generar_index(empleos: list) -> str:
                     <button type="button" class="favorite-toggle" aria-label="Guardar {html.escape(o['titulo'], quote=True)}" aria-pressed="false" title="Guardar oferta">☆</button>
                 </li>""")
         secciones_html.append(f"""
-        <section class="dep-section" data-seccion-distrito="{html.escape(nombre_distrito, quote=True)}">
+        <section class="dep-section" data-seccion-distrito="{html.escape(nombre_distrito, quote=True)}"{' hidden' if not ofertas_distrito else ''}>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 {html.escape(nombre_distrito)}</span>
@@ -264,42 +276,39 @@ def generar_index(empleos: list) -> str:
             <ul class="job-list">{''.join(items) if items else '<li class="district-empty">Todavía no encontramos ofertas en este distrito.</li>'}</ul>
         </section>""")
 
-    accesos_distritos = "".join(
-        f'<button type="button" class="district-chip" data-distrito="{html.escape(nombre, quote=True)}">'
-        f'{html.escape(nombre.title())}<span>{len(por_distrito.get(nombre, []))}</span></button>'
-        for nombre in DISTRITOS_CANETE
-    )
-
     contenido = CABECERA.format(
         titulo="Empleos en Cañete — ofertas en sus 16 distritos",
         descripcion="Ofertas laborales de toda la provincia de Cañete, organizadas por distrito y con enlace al aviso original.",
         ruta_css="",
+        version_css=version_asset("static/style.css"),
+        version_js=version_asset("static/filtros.js"),
     ) + f"""
 <main class="layout-index">
   <section class="buscador-ubicacion" aria-labelledby="titulo-buscador">
-    <h2 id="titulo-buscador">Encuentra empleo cerca de ti</h2>
-    <p>Busca por puesto o empresa y elige tu distrito.</p>
+    <div class="filter-heading">
+      <div>
+        <span class="location-lock">📍 Lima · Cañete</span>
+        <h2 id="titulo-buscador">Encuentra tu próxima oportunidad</h2>
+        <p>Busca entre avisos recientes y entra directamente a la oferta original.</p>
+      </div>
+      <div class="offer-summary"><strong>{len(empleos)}</strong><span>ofertas recientes</span></div>
+    </div>
     <div class="search-row">
       <div class="filtro-control search-control">
         <label for="buscar-ofertas">Buscar empleo</label>
         <input type="search" id="buscar-ofertas" placeholder="Ejemplo: operario, ventas, banco…" autocomplete="off">
       </div>
+      <div class="filtro-control district-control">
+        <label for="filtro-distrito">Distrito</label>
+        <select id="filtro-distrito">{opciones_filtro(set(DISTRITOS_CANETE), 'Todos los distritos')}</select>
+      </div>
       <div class="filtro-control sort-control">
-        <label for="orden-ofertas">Ordenar resultados</label>
+        <label for="orden-ofertas">Ordenar</label>
         <select id="orden-ofertas">
           <option value="titulo">Puesto: A–Z</option>
           <option value="empresa">Empresa: A–Z</option>
         </select>
       </div>
-    </div>
-    <div class="district-chips" aria-label="Accesos rápidos por distrito">
-      <button type="button" class="district-chip active" data-distrito="">Todos <span>{len(empleos)}</span></button>
-      {accesos_distritos}
-    </div>
-    <div class="controles-ubicacion">
-      <div class="filtro-control filtro-fijo"><label for="departamento-fijo">Departamento</label><input id="departamento-fijo" type="text" value="Lima" readonly aria-readonly="true"></div>
-      <div class="filtro-control filtro-fijo"><label for="provincia-fija">Provincia</label><input id="provincia-fija" type="text" value="Cañete" readonly aria-readonly="true"></div>
-      <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(set(DISTRITOS_CANETE), 'Todos los distritos')}</select></div>
     </div>
     <div class="filter-actions">
       <button type="button" class="saved-filter" id="ver-guardados" aria-pressed="false">☆ Ver guardados <span id="cantidad-guardados">0</span></button>

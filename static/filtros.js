@@ -9,7 +9,6 @@
   const vacio = document.querySelector("#resultados-vacios");
   const ofertas = [...document.querySelectorAll(".job-item")];
   const secciones = [...document.querySelectorAll(".dep-section")];
-  const chips = [...document.querySelectorAll(".district-chip")];
   const claveGuardados = "empleos-canete-guardados";
 
   if (!distrito || !busqueda || !orden || !limpiar || !contador || !vacio || !ofertas.length) return;
@@ -60,10 +59,6 @@
     });
   };
 
-  const actualizarChips = () => {
-    chips.forEach((chip) => chip.classList.toggle("active", chip.dataset.distrito === distrito.value));
-  };
-
   const filtrar = () => {
     const texto = normalizar(busqueda.value);
     let visibles = 0;
@@ -86,7 +81,7 @@
         sinOfertas &&
         !texto &&
         !soloGuardados &&
-        (!distrito.value || distrito.value === distritoSeccion);
+        distrito.value === distritoSeccion;
       seccion.hidden = !tieneResultados && !mostrarSeccionVacia;
       if (tieneResultados && (texto || distrito.value || soloGuardados)) {
         const lista = seccion.querySelector(".job-list");
@@ -102,21 +97,7 @@
 
     contador.textContent = `${visibles} ${visibles === 1 ? "oferta encontrada" : "ofertas encontradas"}.`;
     vacio.hidden = visibles !== 0 || (!texto && !soloGuardados && Boolean(distrito.value));
-    actualizarChips();
   };
-
-  chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      distrito.value = chip.dataset.distrito;
-      soloGuardados = false;
-      if (verGuardados) {
-        verGuardados.classList.remove("active");
-        verGuardados.setAttribute("aria-pressed", "false");
-      }
-      filtrar();
-      contador.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
 
   ofertas.forEach((oferta) => {
     const boton = oferta.querySelector(".favorite-toggle");

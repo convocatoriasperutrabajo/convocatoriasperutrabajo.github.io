@@ -7,8 +7,8 @@
 <meta name="description" content="Ofertas laborales de toda la provincia de Cañete, organizadas por distrito y con enlace al aviso original.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="static/style.css">
-<script defer src="static/filtros.js"></script>
+<link rel="stylesheet" href="static/style.css?v=897ff0a1e9">
+<script defer src="static/filtros.js?v=e9d8a821bb"></script>
 </head>
 <body>
 <header class="masthead">
@@ -23,29 +23,30 @@
 
 <main class="layout-index">
   <section class="buscador-ubicacion" aria-labelledby="titulo-buscador">
-    <h2 id="titulo-buscador">Encuentra empleo cerca de ti</h2>
-    <p>Busca por puesto o empresa y elige tu distrito.</p>
+    <div class="filter-heading">
+      <div>
+        <span class="location-lock">📍 Lima · Cañete</span>
+        <h2 id="titulo-buscador">Encuentra tu próxima oportunidad</h2>
+        <p>Busca entre avisos recientes y entra directamente a la oferta original.</p>
+      </div>
+      <div class="offer-summary"><strong>76</strong><span>ofertas recientes</span></div>
+    </div>
     <div class="search-row">
       <div class="filtro-control search-control">
         <label for="buscar-ofertas">Buscar empleo</label>
         <input type="search" id="buscar-ofertas" placeholder="Ejemplo: operario, ventas, banco…" autocomplete="off">
       </div>
+      <div class="filtro-control district-control">
+        <label for="filtro-distrito">Distrito</label>
+        <select id="filtro-distrito"><option value="">Todos los distritos</option><option value="ASIA">ASIA</option><option value="CALANGO">CALANGO</option><option value="CERRO AZUL">CERRO AZUL</option><option value="CHILCA">CHILCA</option><option value="COAYLLO">COAYLLO</option><option value="IMPERIAL">IMPERIAL</option><option value="LUNAHUANÁ">LUNAHUANÁ</option><option value="MALA">MALA</option><option value="NUEVO IMPERIAL">NUEVO IMPERIAL</option><option value="PACARÁN">PACARÁN</option><option value="QUILMANÁ">QUILMANÁ</option><option value="SAN ANTONIO">SAN ANTONIO</option><option value="SAN LUIS">SAN LUIS</option><option value="SAN VICENTE DE CAÑETE">SAN VICENTE DE CAÑETE</option><option value="SANTA CRUZ DE FLORES">SANTA CRUZ DE FLORES</option><option value="ZÚÑIGA">ZÚÑIGA</option></select>
+      </div>
       <div class="filtro-control sort-control">
-        <label for="orden-ofertas">Ordenar resultados</label>
+        <label for="orden-ofertas">Ordenar</label>
         <select id="orden-ofertas">
           <option value="titulo">Puesto: A–Z</option>
           <option value="empresa">Empresa: A–Z</option>
         </select>
       </div>
-    </div>
-    <div class="district-chips" aria-label="Accesos rápidos por distrito">
-      <button type="button" class="district-chip active" data-distrito="">Todos <span>76</span></button>
-      <button type="button" class="district-chip" data-distrito="MALA">Mala<span>14</span></button><button type="button" class="district-chip" data-distrito="ASIA">Asia<span>14</span></button><button type="button" class="district-chip" data-distrito="SAN VICENTE DE CAÑETE">San Vicente De Cañete<span>28</span></button><button type="button" class="district-chip" data-distrito="CHILCA">Chilca<span>20</span></button><button type="button" class="district-chip" data-distrito="SAN ANTONIO">San Antonio<span>0</span></button><button type="button" class="district-chip" data-distrito="CALANGO">Calango<span>0</span></button><button type="button" class="district-chip" data-distrito="CERRO AZUL">Cerro Azul<span>0</span></button><button type="button" class="district-chip" data-distrito="COAYLLO">Coayllo<span>0</span></button><button type="button" class="district-chip" data-distrito="IMPERIAL">Imperial<span>0</span></button><button type="button" class="district-chip" data-distrito="LUNAHUANÁ">Lunahuaná<span>0</span></button><button type="button" class="district-chip" data-distrito="NUEVO IMPERIAL">Nuevo Imperial<span>0</span></button><button type="button" class="district-chip" data-distrito="PACARÁN">Pacarán<span>0</span></button><button type="button" class="district-chip" data-distrito="QUILMANÁ">Quilmaná<span>0</span></button><button type="button" class="district-chip" data-distrito="SAN LUIS">San Luis<span>0</span></button><button type="button" class="district-chip" data-distrito="SANTA CRUZ DE FLORES">Santa Cruz De Flores<span>0</span></button><button type="button" class="district-chip" data-distrito="ZÚÑIGA">Zúñiga<span>0</span></button>
-    </div>
-    <div class="controles-ubicacion">
-      <div class="filtro-control filtro-fijo"><label for="departamento-fijo">Departamento</label><input id="departamento-fijo" type="text" value="Lima" readonly aria-readonly="true"></div>
-      <div class="filtro-control filtro-fijo"><label for="provincia-fija">Provincia</label><input id="provincia-fija" type="text" value="Cañete" readonly aria-readonly="true"></div>
-      <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito"><option value="">Todos los distritos</option><option value="ASIA">ASIA</option><option value="CALANGO">CALANGO</option><option value="CERRO AZUL">CERRO AZUL</option><option value="CHILCA">CHILCA</option><option value="COAYLLO">COAYLLO</option><option value="IMPERIAL">IMPERIAL</option><option value="LUNAHUANÁ">LUNAHUANÁ</option><option value="MALA">MALA</option><option value="NUEVO IMPERIAL">NUEVO IMPERIAL</option><option value="PACARÁN">PACARÁN</option><option value="QUILMANÁ">QUILMANÁ</option><option value="SAN ANTONIO">SAN ANTONIO</option><option value="SAN LUIS">SAN LUIS</option><option value="SAN VICENTE DE CAÑETE">SAN VICENTE DE CAÑETE</option><option value="SANTA CRUZ DE FLORES">SANTA CRUZ DE FLORES</option><option value="ZÚÑIGA">ZÚÑIGA</option></select></div>
     </div>
     <div class="filter-actions">
       <button type="button" class="saved-filter" id="ver-guardados" aria-pressed="false">☆ Ver guardados <span id="cantidad-guardados">0</span></button>
@@ -698,7 +699,7 @@
                     <button type="button" class="favorite-toggle" aria-label="Guardar ¡Primax Chilca! Despachador de combustible / ¡Sueldo + bono 150!" aria-pressed="false" title="Guardar oferta">☆</button>
                 </li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="SAN ANTONIO">
+        <section class="dep-section" data-seccion-distrito="SAN ANTONIO" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 SAN ANTONIO</span>
@@ -707,7 +708,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="CALANGO">
+        <section class="dep-section" data-seccion-distrito="CALANGO" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 CALANGO</span>
@@ -716,7 +717,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="CERRO AZUL">
+        <section class="dep-section" data-seccion-distrito="CERRO AZUL" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 CERRO AZUL</span>
@@ -725,7 +726,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="COAYLLO">
+        <section class="dep-section" data-seccion-distrito="COAYLLO" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 COAYLLO</span>
@@ -734,7 +735,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="IMPERIAL">
+        <section class="dep-section" data-seccion-distrito="IMPERIAL" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 IMPERIAL</span>
@@ -743,7 +744,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="LUNAHUANÁ">
+        <section class="dep-section" data-seccion-distrito="LUNAHUANÁ" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 LUNAHUANÁ</span>
@@ -752,7 +753,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="NUEVO IMPERIAL">
+        <section class="dep-section" data-seccion-distrito="NUEVO IMPERIAL" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 NUEVO IMPERIAL</span>
@@ -761,7 +762,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="PACARÁN">
+        <section class="dep-section" data-seccion-distrito="PACARÁN" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 PACARÁN</span>
@@ -770,7 +771,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="QUILMANÁ">
+        <section class="dep-section" data-seccion-distrito="QUILMANÁ" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 QUILMANÁ</span>
@@ -779,7 +780,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="SAN LUIS">
+        <section class="dep-section" data-seccion-distrito="SAN LUIS" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 SAN LUIS</span>
@@ -788,7 +789,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="SANTA CRUZ DE FLORES">
+        <section class="dep-section" data-seccion-distrito="SANTA CRUZ DE FLORES" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 SANTA CRUZ DE FLORES</span>
@@ -797,7 +798,7 @@
             </h2>
             <ul class="job-list"><li class="district-empty">Todavía no encontramos ofertas en este distrito.</li></ul>
         </section>
-        <section class="dep-section" data-seccion-distrito="ZÚÑIGA">
+        <section class="dep-section" data-seccion-distrito="ZÚÑIGA" hidden>
             <h2>
               <button type="button" class="district-heading" aria-expanded="true">
                 <span>📍 ZÚÑIGA</span>
