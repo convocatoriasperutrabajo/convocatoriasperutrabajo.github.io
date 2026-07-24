@@ -82,6 +82,19 @@ class ProyectoTests(unittest.TestCase):
         self.assertEqual(con_enlace.count("Postular en la institución"), 1)
         self.assertIn("https://entidad.gob.pe/convocatoria", con_enlace)
 
+    def test_advierte_sobre_el_certificado_de_diresa(self):
+        oferta = {
+            **OFERTA,
+            "vacantes": "1",
+            "remuneracion": "3,000",
+            "fecha_inicio": "22/07/2026",
+            "fecha_fin": "31/07/2026",
+            "url_postulacion": "https://share.google/IovzweaQemtlVGF9i",
+        }
+        pagina = generar_pagina_detalle(oferta)
+        self.assertIn("problema con su certificado de seguridad", pagina)
+        self.assertIn("<code>apps.diresamdd.gob.pe</code>", pagina)
+
     def test_extrae_requisitos_del_detalle_de_servir(self):
         texto = (
             "REQUERIMIENTO: Título profesional EXPERIENCIA: Cinco años "

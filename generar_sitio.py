@@ -101,6 +101,15 @@ def generar_pagina_detalle(oferta: dict) -> str:
         if boton_postulacion else
         '<p class="sin-enlace-directo">Aún no hay un enlace directo de postulación publicado por la institución.</p>'
     )
+    aviso_certificado = (
+        '<aside class="aviso-certificado" role="note">'
+        '<strong>Aviso sobre la web de DIRESA Madre de Dios</strong>'
+        '<p>El portal oficial presenta un problema con su certificado de seguridad y el navegador puede mostrar una advertencia. '
+        'Antes de continuar, comprueba que la dirección visible sea exactamente '
+        '<code>apps.diresamdd.gob.pe</code>. No ingreses contraseñas ni datos bancarios.</p>'
+        '</aside>'
+        if url_postulacion.startswith("https://share.google/IovzweaQemtlVGF9i") else ""
+    )
     ultimo_paso = (
         'Presiona el botón rojo para continuar en la web oficial de la institución.'
         if url_postulacion else
@@ -141,6 +150,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
       <li>{ultimo_paso}</li>
     </ol>
     <p>No necesitas crear una cuenta en esta página para revisar la convocatoria.</p>
+    {aviso_certificado}
     {accion_postulacion}
   </section>"""
     return CABECERA.format(
