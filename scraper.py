@@ -377,6 +377,10 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
 
             enriquecer_ofertas_pagina(driver, ofertas)
 
+            enlaces_obtenidos += obtener_enlaces_postulacion_pagina(
+                driver, ofertas, empleos, max_enlaces - enlaces_obtenidos, pagina_actual
+            )
+
             documentos_descargados += descargar_documentos_pagina(
                 driver, ofertas, empleos, max_documentos - documentos_descargados
             )
