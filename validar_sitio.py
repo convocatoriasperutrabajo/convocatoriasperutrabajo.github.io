@@ -60,7 +60,12 @@ def validar() -> None:
         ids.add(oferta["id"])
 
         url_oficial = str(oferta.get("url_oficial", ""))
-        if url_oficial and not es_url_oficial(url_oficial):
+        es_computrabajo = str(oferta.get("fuente", "")).casefold() == "computrabajo perú".casefold()
+        host_oficial = (urlparse(url_oficial).hostname or "").lower()
+        if es_computrabajo:
+            if host_oficial != "pe.computrabajo.com" or "/ofertas-de-trabajo/" not in urlparse(url_oficial).path:
+                errores.append(f"oferta {posicion}: aviso de Computrabajo no individual {url_oficial}")
+        elif url_oficial and not es_url_oficial(url_oficial):
             errores.append(f"oferta {posicion}: fuente no oficial {url_oficial}")
 
         url_postulacion = str(oferta.get("url_postulacion", ""))
@@ -106,7 +111,7 @@ def validar() -> None:
     if errores:
         raise RuntimeError("Sitio inválido:\n- " + "\n- ".join(errores))
 
-    print(f"✅ Sitio validado: {len(empleos)} ofertas de fuente oficial")
+    print(f"✅ Sitio validado: {len(empleos)} ofertas con enlaces verificados")
 
 
 if __name__ == "__main__":
