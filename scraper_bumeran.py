@@ -1,11 +1,11 @@
-"""Recopila avisos individuales de Indeed ubicados en la provincia de Cañete."""
+"""Recopila ofertas recientes de Bumeran ubicadas en los distritos de Cañete."""
 
 import hashlib
 import re
 import time
 import unicodedata
 from datetime import date, timedelta
-from urllib.parse import parse_qs, quote_plus, urljoin, urlparse
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -14,8 +14,14 @@ from empleo_utils import asegurar_id
 from filtro_fecha import dias_desde_publicacion, es_publicacion_reciente
 
 
-BASE = "https://pe.indeed.com"
-LUGARES_BUSQUEDA = {
+BASE = "https://www.bumeran.com.pe"
+NOMBRES_BUSQUEDA = {
+    "SAN VICENTE DE CAÑETE": "san-vicente-de-canete",
+    "SAN LUIS": "san-luis-de-canete",
+    "SAN ANTONIO": "san-antonio-de-canete",
+}
+NOMBRES_VALIDACION = {
+    "SAN VICENTE DE CAÑETE": "San Vicente de Cañete",
     "SAN LUIS": "San Luis de Cañete",
     "SAN ANTONIO": "San Antonio de Cañete",
 }
@@ -32,9 +38,8 @@ def crear_driver(headless: bool = True):
         opciones.add_argument("--headless=new")
     opciones.add_argument("--no-sandbox")
     opciones.add_argument("--disable-dev-shm-usage")
-    opciones.add_argument("--window-size=1440,1200")
+    opciones.add_argument("--window-size=1440,1400")
     opciones.add_argument("--lang=es-PE")
-    opciones.add_argument("--disable-blink-features=AutomationControlled")
     servicio = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=servicio, options=opciones)
 
@@ -48,66 +53,77 @@ def normalizar(texto: object) -> str:
     return "".join(c for c in valor if not unicodedata.combining(c)).casefold()
 
 
+def slug_distrito(distrito: str) -> str:
+    if distrito in NOMBRES_BUSQUEDA:
+        return NOMBRES_BUSQUEDA[distrito]
+    return re.sub(r"[^a-z0-9]+", "-", normalizar(distrito)).strip("-")
+
+
 def url_individual(href: str) -> str:
     url = urljoin(BASE, href)
-    codigo = parse_qs(urlparse(url).query).get("jk", [""])[0]
-    return f"{BASE}/viewjob?jk={codigo}" if codigo else ""
+    partes = urlparse(url)
+    if partes.hostname != "www.bumeran.com.pe" or not partes.path.startswith("/empleos/") or not partes.path.endswith(".html"):
+        return ""
+    return f"{partes.scheme}://{partes.netloc}{partes.path}"
+
+
+def _tarjeta_para(enlace):
+    for padre in enlace.parents:
+        if padre.name not in {"article", "li", "div"}:
+            continue
+        texto = limpiar(padre.get_text(" ", strip=True))
+        if len(texto) <= 3500 and re.search(r"(publicado|actualizado)\s+(hoy|ayer|hace)", texto, re.I):
+            return padre
+    return enlace.parent
 
 
 def extraer_ofertas_html(html: str, distrito: str, limite: int = 10) -> list[dict]:
-    """Extrae solamente tarjetas cuya ubicación coincide con el distrito solicitado."""
     soup = BeautifulSoup(html, "html.parser")
     hoy = date.today()
     ofertas = []
     vistos = set()
-    lugar_buscado = LUGARES_BUSQUEDA.get(distrito, distrito.title())
-    claves_ubicacion = {normalizar(distrito), normalizar(lugar_buscado)}
+    nombre_ubicacion = NOMBRES_VALIDACION.get(distrito, distrito.title())
 
-    for enlace in soup.select("a[data-jk], a.jcs-JobTitle, h2.jobTitle a"):
+    for enlace in soup.select('a[href*="/empleos/"][href$=".html"]'):
         url = url_individual(enlace.get("href", ""))
         if not url or url in vistos:
             continue
-        tarjeta = enlace.find_parent(
-            lambda tag: tag.name in {"div", "li"} and (
-                "job_seen_beacon" in (tag.get("class") or [])
-                or tag.get("data-testid") == "slider_item"
-                or "result" in " ".join(tag.get("class") or []).casefold()
-            )
-        ) or enlace.parent
-        ubicacion_nodo = tarjeta.select_one(
-            '[data-testid="text-location"], .companyLocation, [data-testid="job-location"]'
-        )
-        ubicacion = limpiar(ubicacion_nodo.get_text(" ", strip=True) if ubicacion_nodo else "")
-        ubicacion_normalizada = normalizar(ubicacion)
-        if not ubicacion or not any(clave in ubicacion_normalizada for clave in claves_ubicacion):
+        tarjeta = _tarjeta_para(enlace)
+        texto_tarjeta = limpiar(tarjeta.get_text(" ", strip=True))
+        if normalizar(nombre_ubicacion) not in normalizar(texto_tarjeta):
             continue
-
-        titulo = limpiar(enlace.get_text(" ", strip=True))
-        empresa_nodo = tarjeta.select_one('[data-testid="company-name"], .companyName, [data-testid="companyName"]')
-        entidad = limpiar(empresa_nodo.get_text(" ", strip=True) if empresa_nodo else "") or "Empresa no especificada"
-        salario_nodo = tarjeta.select_one(
-            '.salary-snippet-container, .salaryText, [data-testid="attribute_snippet_testid"]'
+        antiguedad_match = re.search(
+            r"(?:publicado|actualizado)\s+(?:hoy|ayer|hace\s+(?:\d+\s+)?(?:minutos?|horas?|d[ií]as?|semanas?|mes(?:es)?))",
+            texto_tarjeta,
+            re.I,
         )
-        salario = limpiar(salario_nodo.get_text(" ", strip=True) if salario_nodo else "") or "No especificado"
-        fecha_nodo = tarjeta.select_one(".date, [data-testid='myJobsStateDate']")
-        antiguedad = limpiar(fecha_nodo.get_text(" ", strip=True) if fecha_nodo else "") or "Publicado recientemente"
+        antiguedad = limpiar(antiguedad_match.group(0) if antiguedad_match else "")
         if not es_publicacion_reciente(antiguedad):
             continue
         fecha_publicacion = hoy - timedelta(days=dias_desde_publicacion(antiguedad) or 0)
+
+        titulo_nodo = tarjeta.select_one("h2, h3")
+        titulo = limpiar(
+            titulo_nodo.get_text(" ", strip=True) if titulo_nodo else enlace.get("title") or enlace.get_text(" ", strip=True)
+        )
+        if not titulo:
+            continue
+        empresa_nodo = tarjeta.select_one('[data-testid*="company"], .company, [class*="company"]')
+        entidad = limpiar(empresa_nodo.get_text(" ", strip=True) if empresa_nodo else "") or "Empresa no especificada"
         referencia = hashlib.sha256(url.encode("utf-8")).hexdigest()[:10].upper()
         ofertas.append(asegurar_id({
             "titulo": titulo,
             "entidad": entidad,
-            "ubicacion": ubicacion,
+            "ubicacion": f"{nombre_ubicacion}, Lima",
             "departamento": "LIMA",
             "provincia": "CAÑETE",
             "distrito": distrito,
-            "numero_convocatoria": f"IN-{referencia}",
+            "numero_convocatoria": f"BU-{referencia}",
             "vacantes": "1",
-            "remuneracion": salario,
+            "remuneracion": "No especificado",
             "fecha_inicio": fecha_publicacion.strftime("%d/%m/%Y"),
             "fecha_fin": (fecha_publicacion + timedelta(days=7)).strftime("%d/%m/%Y"),
-            "fuente": "Indeed Perú",
+            "fuente": "Bumeran Perú",
             "url_oficial": url,
             "url_postulacion": url,
             "detalle_entidad": antiguedad,
@@ -118,7 +134,7 @@ def extraer_ofertas_html(html: str, distrito: str, limite: int = 10) -> list[dic
     return ofertas
 
 
-def recopilar_indeed(headless: bool = True, limite_por_distrito: int = 10) -> list[dict]:
+def recopilar_bumeran(headless: bool = True, limite_por_distrito: int = 10) -> list[dict]:
     from selenium.webdriver.common.by import By
     from selenium.webdriver.support.ui import WebDriverWait
 
@@ -126,16 +142,15 @@ def recopilar_indeed(headless: bool = True, limite_por_distrito: int = 10) -> li
     recopiladas = {}
     try:
         for distrito in DISTRITOS_CANETE:
-            lugar = LUGARES_BUSQUEDA.get(distrito, distrito.title())
-            url = f"{BASE}/jobs?l={quote_plus(lugar + ', Lima')}&sort=date"
-            print(f"Buscando ofertas de Indeed en {lugar}...")
+            url = f"{BASE}/empleos-en-{slug_distrito(distrito)}-lima.html"
+            print(f"Buscando ofertas de Bumeran en {distrito.title()}...")
             driver.get(url)
             WebDriverWait(driver, 20).until(
-                lambda d: d.find_elements(By.CSS_SELECTOR, "a[data-jk], a.jcs-JobTitle, h2.jobTitle a")
+                lambda d: d.find_elements(By.CSS_SELECTOR, 'a[href*="/empleos/"]')
                 or "captcha" in d.page_source.casefold()
             )
             nuevas = extraer_ofertas_html(driver.page_source, distrito, limite=limite_por_distrito)
-            print(f"  {len(nuevas)} ofertas válidas")
+            print(f"  {len(nuevas)} ofertas válidas de los últimos 7 días")
             for oferta in nuevas:
                 recopiladas[oferta["url_oficial"]] = oferta
             time.sleep(1)

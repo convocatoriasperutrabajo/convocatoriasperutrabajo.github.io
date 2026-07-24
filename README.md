@@ -1,10 +1,10 @@
 # Empleos en Cañete
 
-Sitio estático que reúne ofertas recientes de Computrabajo, Indeed y LinkedIn para los 16 distritos de la provincia de Cañete. Publica información resumida, separa los avisos por distrito y dirige siempre al aviso individual original.
+Sitio estático que reúne ofertas de los últimos 7 días de Computrabajo, Indeed, LinkedIn y Bumeran para los 16 distritos de la provincia de Cañete. Publica información resumida, separa los avisos por distrito y dirige siempre al aviso individual original.
 
 ## Actualización automática
 
-GitHub Actions ejecuta diariamente `scraper.py`, consulta las tres fuentes y regenera el sitio. La lista se conserva en `empleos.json`; cada oferta recibe un identificador estable basado en entidad, referencia, puesto y ubicación.
+GitHub Actions ejecuta diariamente `scraper.py`, consulta las cuatro fuentes y regenera el sitio. La lista se conserva en `empleos.json`; cada oferta recibe un identificador estable basado en entidad, referencia, puesto y ubicación. Los avisos con más de 7 días se eliminan.
 
 Si una fuente bloquea temporalmente la consulta, el actualizador conserva sus ofertas anteriores. Antes de guardar cambios, `validar_sitio.py` comprueba que no haya IDs duplicados, fichas faltantes ni enlaces que no conduzcan a avisos individuales de Computrabajo, Indeed o LinkedIn.
 

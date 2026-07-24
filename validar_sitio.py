@@ -1,5 +1,6 @@
 """Valida los datos y el sitio antes de que GitHub Actions publique cambios."""
 import json
+from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -59,10 +60,20 @@ def validar() -> None:
             errores.append(f"oferta {posicion}: ID duplicado {oferta['id']}")
         ids.add(oferta["id"])
 
+        if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn", "Bumeran Perú"}:
+            try:
+                publicada = datetime.strptime(oferta["fecha_inicio"], "%d/%m/%Y").date()
+                antiguedad = (date.today() - publicada).days
+                if antiguedad < 0 or antiguedad > 7:
+                    errores.append(f"oferta {posicion}: tiene {antiguedad} días y supera el máximo de 7")
+            except (KeyError, TypeError, ValueError):
+                errores.append(f"oferta {posicion}: fecha de publicación inválida")
+
         url_oficial = str(oferta.get("url_oficial", ""))
         es_computrabajo = str(oferta.get("fuente", "")).casefold() == "computrabajo perú".casefold()
         es_indeed = str(oferta.get("fuente", "")).casefold() == "indeed perú".casefold()
         es_linkedin = str(oferta.get("fuente", "")).casefold() == "linkedin"
+        es_bumeran = str(oferta.get("fuente", "")).casefold() == "bumeran perú".casefold()
         host_oficial = (urlparse(url_oficial).hostname or "").lower()
         if es_computrabajo:
             if host_oficial != "pe.computrabajo.com" or "/ofertas-de-trabajo/" not in urlparse(url_oficial).path:
@@ -74,6 +85,10 @@ def validar() -> None:
         elif es_linkedin:
             if host_oficial != "pe.linkedin.com" or not urlparse(url_oficial).path.startswith("/jobs/view/"):
                 errores.append(f"oferta {posicion}: aviso de LinkedIn no individual {url_oficial}")
+        elif es_bumeran:
+            ruta_bumeran = urlparse(url_oficial).path
+            if host_oficial != "www.bumeran.com.pe" or not ruta_bumeran.startswith("/empleos/") or not ruta_bumeran.endswith(".html"):
+                errores.append(f"oferta {posicion}: aviso de Bumeran no individual {url_oficial}")
         elif url_oficial and not es_url_oficial(url_oficial):
             errores.append(f"oferta {posicion}: fuente no oficial {url_oficial}")
 

@@ -109,7 +109,8 @@ def generar_pagina_detalle(oferta: dict) -> str:
         f'<div class="acciones-oficiales"><a class="btn-consulta" href="{html.escape(url_consulta, quote=True)}" '
         'target="_blank" rel="noopener noreferrer">Buscar en el portal de la institución →</a></div>'
         if url_consulta else
-        '<p class="sin-enlace-directo">Aún no hay un enlace directo de postulación publicado por la institución.</p>'
+        '<p class="sin-enlace-directo">Aún no hay un enlace directo de postulación publicado por la institución; '
+        'no te enviaremos a un listado general.</p>'
         )
     )
     aviso_certificado = (
@@ -190,7 +191,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
         <div><dt>Referencia</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
         <div><dt>Fuente</dt><dd>{html.escape(str(oferta.get("fuente", "Aviso original")))}</dd></div>
         {f'<div><dt>Código SERVIR</dt><dd class="mono">N° {html.escape(str(oferta["codigo_servir"]))}</dd></div>' if oferta.get('codigo_servir') else ''}
-        <div><dt>{"Fecha de recopilación" if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn"} else "Vigencia"}</dt><dd>{html.escape(oferta['fecha_inicio']) if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn"} else f"{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}"}</dd></div>
+        <div><dt>{"Fecha de publicación" if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn", "Bumeran Perú"} else "Vigencia"}</dt><dd>{html.escape(oferta['fecha_inicio']) if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn", "Bumeran Perú"} else f"{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}"}</dd></div>
       </dl>
       <div class="guia-postulacion">
         <strong>Antes de postular</strong>

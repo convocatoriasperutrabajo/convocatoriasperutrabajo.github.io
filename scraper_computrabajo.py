@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from config_canete import BASE_COMPUTRABAJO, ZONAS_COMPUTRABAJO
 from empleo_utils import asegurar_id
+from filtro_fecha import dias_desde_publicacion, es_publicacion_reciente
 
 
 BASE = BASE_COMPUTRABAJO
@@ -58,6 +59,11 @@ def extraer_ofertas_html(html: str, limite: int = 12, zona: str | None = None) -
             (texto for texto in textos if "," in texto and any(z in texto.casefold() for z in zonas_validas)),
             "",
         )
+        # En Lima también existen localidades llamadas San Luis y San Antonio.
+        # Para estas búsquedas ambiguas exigimos que la tarjeta mencione Cañete.
+        if zona and zona.casefold() in {"san luis", "san antonio"}:
+            if "cañete" not in limpiar(tarjeta.get_text(" ", strip=True)).casefold():
+                continue
         if not titulo or not ubicacion or url in vistos:
             continue
         vistos.add(url)
@@ -73,6 +79,9 @@ def extraer_ofertas_html(html: str, limite: int = 12, zona: str | None = None) -
             (texto for texto in textos if texto.lower().startswith(("hace ", "ayer", "hoy"))),
             "Publicado recientemente",
         )
+        if not es_publicacion_reciente(antiguedad):
+            continue
+        fecha_publicacion = hoy - timedelta(days=dias_desde_publicacion(antiguedad) or 0)
         referencia = hashlib.sha256(url.encode("utf-8")).hexdigest()[:10].upper()
         oferta = asegurar_id({
             "titulo": titulo,
@@ -84,8 +93,8 @@ def extraer_ofertas_html(html: str, limite: int = 12, zona: str | None = None) -
             "numero_convocatoria": f"CT-{referencia}",
             "vacantes": "1",
             "remuneracion": salario,
-            "fecha_inicio": hoy.strftime("%d/%m/%Y"),
-            "fecha_fin": (hoy + timedelta(days=30)).strftime("%d/%m/%Y"),
+            "fecha_inicio": fecha_publicacion.strftime("%d/%m/%Y"),
+            "fecha_fin": (fecha_publicacion + timedelta(days=7)).strftime("%d/%m/%Y"),
             "fuente": "Computrabajo Perú",
             "url_oficial": url,
             "url_postulacion": url,

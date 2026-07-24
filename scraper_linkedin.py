@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from config_canete import DISTRITOS_CANETE
 from empleo_utils import asegurar_id
+from filtro_fecha import dias_desde_publicacion, es_publicacion_reciente
 
 
 BASE = "https://pe.linkedin.com"
@@ -96,6 +97,9 @@ def extraer_ofertas_html(html: str, limite: int = 100) -> list[dict]:
             continue
 
         antiguedad = limpiar(fecha_nodo.get_text(" ", strip=True) if fecha_nodo else "") or "Publicado recientemente"
+        if not es_publicacion_reciente(antiguedad):
+            continue
+        fecha_publicacion = hoy - timedelta(days=dias_desde_publicacion(antiguedad) or 0)
         referencia = hashlib.sha256(url.encode("utf-8")).hexdigest()[:10].upper()
         ofertas.append(asegurar_id({
             "titulo": titulo,
@@ -107,8 +111,8 @@ def extraer_ofertas_html(html: str, limite: int = 100) -> list[dict]:
             "numero_convocatoria": f"LI-{referencia}",
             "vacantes": "1",
             "remuneracion": "No especificado",
-            "fecha_inicio": hoy.strftime("%d/%m/%Y"),
-            "fecha_fin": (hoy + timedelta(days=30)).strftime("%d/%m/%Y"),
+            "fecha_inicio": fecha_publicacion.strftime("%d/%m/%Y"),
+            "fecha_fin": (fecha_publicacion + timedelta(days=7)).strftime("%d/%m/%Y"),
             "fuente": "LinkedIn",
             "url_oficial": url,
             "url_postulacion": url,

@@ -1,11 +1,13 @@
 """Actualiza las fuentes privadas sin borrar resultados previos cuando una web bloquea el acceso."""
 
 import json
+from datetime import date, datetime
 from pathlib import Path
 
 from scraper_computrabajo import recopilar_computrabajo
 from scraper_indeed import recopilar_indeed
 from scraper_linkedin import recopilar_linkedin
+from scraper_bumeran import recopilar_bumeran
 
 
 ARCHIVO = Path("empleos.json")
@@ -13,6 +15,7 @@ FUENTES = {
     "Computrabajo Perú": recopilar_computrabajo,
     "Indeed Perú": recopilar_indeed,
     "LinkedIn": recopilar_linkedin,
+    "Bumeran Perú": recopilar_bumeran,
 }
 
 
@@ -44,7 +47,12 @@ def ejecutar_fuentes(headless: bool = True) -> None:
     unicas = {}
     for ofertas in por_fuente.values():
         for oferta in ofertas:
-            unicas[oferta["url_oficial"]] = oferta
+            try:
+                publicada = datetime.strptime(oferta["fecha_inicio"], "%d/%m/%Y").date()
+            except (KeyError, TypeError, ValueError):
+                continue
+            if 0 <= (date.today() - publicada).days <= 7:
+                unicas[oferta["url_oficial"]] = oferta
 
     if not unicas:
         raise RuntimeError("Ninguna fuente devolvió empleos y no existe una publicación anterior")
