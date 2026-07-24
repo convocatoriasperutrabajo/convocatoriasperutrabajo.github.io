@@ -24,6 +24,11 @@ class ProyectoTests(unittest.TestCase):
         self.assertIn('<select id="filtro-distrito">', pagina)
         self.assertIn('static/filtros.js?v=', pagina)
         self.assertIn('data-seccion-distrito="MALA" hidden', pagina)
+        self.assertIn('class="masthead-mark" aria-hidden="true">CP</span>', pagina)
+        self.assertNotIn('masthead-mark-link', pagina)
+        self.assertNotIn('>☰<', pagina)
+        self.assertIn('<h1><a href="?v=', pagina)
+        self.assertNotIn('href="index.html"', pagina)
 
     def test_id_y_nombre_de_ficha_son_estables(self):
         primera = asegurar_id(OFERTA)
