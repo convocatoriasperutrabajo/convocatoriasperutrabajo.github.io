@@ -114,6 +114,13 @@ a { color: inherit; }
   border-bottom: 1px solid var(--rule);
   padding-bottom: 8px;
 }
+.district-count {
+  float: right;
+  font-family: Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
 .job-list { list-style: none; padding: 0; margin: 0; }
 .job-list li { padding: 9px 0; border-bottom: 1px dashed var(--paper-dim); }
 .job-list li:last-child { border-bottom: none; }
