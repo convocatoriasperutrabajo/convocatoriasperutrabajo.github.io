@@ -2,7 +2,7 @@ import unittest
 from datetime import date
 
 from empleo_utils import asegurar_id, es_enlace_postulacion_directo, nombre_archivo_oferta
-from generar_sitio import generar_pagina_detalle
+from generar_sitio import generar_index, generar_pagina_detalle
 from scraper import extraer_secciones_detalle, retirar_duplicados_sin_codigo, retirar_ofertas_vencidas
 from validar_sitio import es_url_oficial, es_url_postulacion_valida
 
@@ -16,6 +16,14 @@ OFERTA = {
 
 
 class ProyectoTests(unittest.TestCase):
+    def test_lima_y_canete_son_fijos_y_distrito_es_desplegable(self):
+        pagina = generar_index([])
+        self.assertIn('value="Lima" readonly', pagina)
+        self.assertIn('value="Cañete" readonly', pagina)
+        self.assertNotIn('id="filtro-departamento"', pagina)
+        self.assertNotIn('id="filtro-provincia"', pagina)
+        self.assertIn('<select id="filtro-distrito">', pagina)
+
     def test_id_y_nombre_de_ficha_son_estables(self):
         primera = asegurar_id(OFERTA)
         segunda = asegurar_id(dict(reversed(list(OFERTA.items()))))

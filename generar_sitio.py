@@ -228,15 +228,11 @@ def opciones_filtro(valores: set[str], etiqueta: str) -> str:
 
 def generar_index(empleos: list) -> str:
     por_distrito = {}
-    departamentos, provincias, distritos = set(), set(), set()
     for original in empleos:
         o = asegurar_id(original)
         depto, provincia, distrito = ubicacion_desglosada(o)
         nombre_distrito = distrito or provincia or depto
         por_distrito.setdefault(nombre_distrito, []).append(o)
-        departamentos.add(depto)
-        provincias.add(provincia)
-        distritos.add(distrito)
 
     secciones_html = []
     for nombre_distrito in DISTRITOS_CANETE:
@@ -301,8 +297,8 @@ def generar_index(empleos: list) -> str:
       {accesos_distritos}
     </div>
     <div class="controles-ubicacion">
-      <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento">{opciones_filtro(departamentos, 'Todas las zonas')}</select></div>
-      <div class="filtro-control"><label for="filtro-provincia">Provincia o localidad</label><select id="filtro-provincia">{opciones_filtro(provincias, 'Todas las provincias')}</select></div>
+      <div class="filtro-control filtro-fijo"><label for="departamento-fijo">Departamento</label><input id="departamento-fijo" type="text" value="Lima" readonly aria-readonly="true"></div>
+      <div class="filtro-control filtro-fijo"><label for="provincia-fija">Provincia</label><input id="provincia-fija" type="text" value="Cañete" readonly aria-readonly="true"></div>
       <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(set(DISTRITOS_CANETE), 'Todos los distritos')}</select></div>
     </div>
     <div class="filter-actions">
@@ -312,7 +308,7 @@ def generar_index(empleos: list) -> str:
   </section>
   <p class="total-ofertas" id="contador-resultados" aria-live="polite">{len(empleos)} ofertas registradas actualmente.</p>
   {''.join(secciones_html) if secciones_html else '<p class="empty-state">Todavía no hay ofertas cargadas. Corre scraper.py primero.</p>'}
-  <p class="empty-state resultados-vacios" id="resultados-vacios" hidden>No encontramos ofertas para esa ubicación. Prueba con otro departamento o mira todas las ofertas.</p>
+  <p class="empty-state resultados-vacios" id="resultados-vacios" hidden>No encontramos ofertas para ese distrito. Prueba con otro distrito o mira todas las ofertas.</p>
 </main>
 """ + PIE
 
