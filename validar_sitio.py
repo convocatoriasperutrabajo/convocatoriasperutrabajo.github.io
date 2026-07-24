@@ -4,7 +4,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from consola import configurar_salida_utf8
-from empleo_utils import asegurar_id, nombre_archivo_oferta
+from empleo_utils import asegurar_id, es_enlace_postulacion_directo, nombre_archivo_oferta
 
 
 configurar_salida_utf8()
@@ -64,8 +64,11 @@ def validar() -> None:
             errores.append(f"oferta {posicion}: fuente no oficial {url_oficial}")
 
         url_postulacion = str(oferta.get("url_postulacion", ""))
-        if url_postulacion and not es_url_postulacion_valida(url_postulacion):
-            errores.append(f"oferta {posicion}: enlace de postulación inválido {url_postulacion}")
+        if url_postulacion and (
+            not es_url_postulacion_valida(url_postulacion)
+            or not es_enlace_postulacion_directo(url_postulacion)
+        ):
+            errores.append(f"oferta {posicion}: el enlace no abre una postulación específica {url_postulacion}")
 
         enlaces_bases = oferta.get("enlaces_bases", [])
         if enlaces_bases and not isinstance(enlaces_bases, list):

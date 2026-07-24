@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 
-from empleo_utils import asegurar_id, nombre_archivo_oferta
+from empleo_utils import asegurar_id, es_enlace_postulacion_directo, nombre_archivo_oferta
 from generar_sitio import generar_pagina_detalle
 from scraper import extraer_secciones_detalle, retirar_duplicados_sin_codigo, retirar_ofertas_vencidas
 from validar_sitio import es_url_oficial, es_url_postulacion_valida
@@ -45,6 +45,10 @@ class ProyectoTests(unittest.TestCase):
     def test_rechaza_agregadores_como_enlace_de_postulacion(self):
         self.assertTrue(es_url_postulacion_valida("https://unajma.edu.pe/convocatoria-personal/"))
         self.assertFalse(es_url_postulacion_valida("https://convocatoriasdetrabajo.com/aviso"))
+        self.assertFalse(es_enlace_postulacion_directo("https://unajma.edu.pe/convocatoria-personal/"))
+        self.assertFalse(es_enlace_postulacion_directo("https://www.gob.pe/muniandresavelinocaceresdorregaray"))
+        self.assertFalse(es_enlace_postulacion_directo("https://share.google/IovzweaQemtlVGF9i"))
+        self.assertTrue(es_enlace_postulacion_directo("https://entidad.gob.pe/convocatorias/cas-001"))
 
     def test_oculta_el_word_pero_conserva_bases_reales(self):
         oferta = {

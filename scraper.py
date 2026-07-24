@@ -24,7 +24,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-from empleo_utils import asegurar_id, clave_base_oferta
+from empleo_utils import asegurar_id, clave_base_oferta, es_enlace_postulacion_directo
 from consola import configurar_salida_utf8
 
 configurar_salida_utf8()
@@ -165,7 +165,7 @@ def extraer_detalle_abierto(driver) -> dict:
                 "titulo": texto_enlace or "Descargar bases o anexo oficial",
                 "url": href,
             })
-        elif not resultado.get("url_postulacion"):
+        elif es_enlace_postulacion_directo(href) and not resultado.get("url_postulacion"):
             resultado["url_postulacion"] = href
     if enlaces_bases:
         resultado["enlaces_bases"] = enlaces_bases
