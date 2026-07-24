@@ -108,7 +108,14 @@
 
     secciones.forEach((seccion) => {
       const tieneResultados = Boolean(seccion.querySelector(".job-item:not([hidden])"));
-      seccion.hidden = !tieneResultados;
+      const sinOfertas = !seccion.querySelector(".job-item");
+      const distritoSeccion = seccion.dataset.seccionDistrito;
+      const mostrarSeccionVacia =
+        sinOfertas &&
+        !texto &&
+        !soloGuardados &&
+        (!distrito.value || distrito.value === distritoSeccion);
+      seccion.hidden = !tieneResultados && !mostrarSeccionVacia;
       if (tieneResultados && (texto || distrito.value || soloGuardados)) {
         const lista = seccion.querySelector(".job-list");
         const boton = seccion.querySelector(".district-heading");
@@ -122,7 +129,7 @@
     });
 
     contador.textContent = `${visibles} ${visibles === 1 ? "oferta encontrada" : "ofertas encontradas"}.`;
-    vacio.hidden = visibles !== 0;
+    vacio.hidden = visibles !== 0 || (!texto && !soloGuardados && Boolean(distrito.value));
     actualizarChips();
   };
 

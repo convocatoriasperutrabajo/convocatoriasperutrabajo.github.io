@@ -202,9 +202,24 @@ a { color: inherit; }
   padding: 9px 0;
 }
 .job-list li:last-child { border-bottom: none; }
+.job-list .district-empty {
+  color: var(--ink-soft);
+  display: block;
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: 12px 0 4px;
+}
 .job-link { flex: 1; min-width: 0; text-decoration: none; display: block; }
 .job-title { display: block; font-weight: 500; font-size: 0.95rem; }
 .job-meta { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+.source-badge {
+  background: var(--paper-dim);
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 0.68rem;
+  margin-left: 5px;
+  padding: 1px 7px;
+}
 .job-profile { display: block; margin-top: 4px; font-size: 0.78rem; line-height: 1.4; color: var(--ink); }
 .job-link:hover .job-title { color: var(--seal-red); }
 .favorite-toggle {

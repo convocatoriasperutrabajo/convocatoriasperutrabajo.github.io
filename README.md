@@ -1,12 +1,12 @@
 # Empleos en Cañete
 
-Sitio estático que reúne ofertas recientes de Computrabajo para Mala, Asia, Chilca y San Vicente de Cañete. Publica información resumida y dirige siempre al aviso individual original.
+Sitio estático que reúne ofertas de los últimos 7 días de Computrabajo, Indeed, LinkedIn y Bumeran para los 16 distritos de la provincia de Cañete. Publica información resumida, separa los avisos por distrito y dirige siempre al aviso individual original.
 
 ## Actualización automática
 
-GitHub Actions ejecuta diariamente `scraper.py`, regenera el sitio y publica solo las convocatorias no publicadas antes en Facebook. La lista se conserva en `empleos.json`; cada convocatoria recibe un identificador estable basado en entidad, número, puesto y ubicación, por lo que no se mezclan números repetidos de entidades distintas. El actualizador abre la ficha de SERVIR, conserva sus requisitos y, cuando SERVIR muestra enlaces de bases/anexos, los publica en la ficha.
+GitHub Actions ejecuta diariamente `scraper.py`, consulta las cuatro fuentes y regenera el sitio. La lista se conserva en `empleos.json`; cada oferta recibe un identificador estable basado en entidad, referencia, puesto y ubicación. Los avisos con más de 7 días se eliminan.
 
-Antes de guardar cambios, `validar_sitio.py` comprueba que no haya IDs duplicados, fichas faltantes, documentos rotos ni enlaces a dominios ajenos al Estado.
+Si una fuente bloquea temporalmente la consulta, el actualizador conserva sus ofertas anteriores. Antes de guardar cambios, `validar_sitio.py` comprueba que no haya IDs duplicados, fichas faltantes ni enlaces que no conduzcan a avisos individuales de Computrabajo, Indeed o LinkedIn.
 
 ## Uso local
 
@@ -14,11 +14,8 @@ Antes de guardar cambios, `validar_sitio.py` comprueba que no haya IDs duplicado
 pip install -r requirements.txt
 python scraper.py --max-paginas 2 --max-documentos 0
 python generar_sitio.py
-python facebook_poster.py --dry-run
 ```
-
-Para publicar en Facebook, crea un archivo `.env` desde `.env.example` y completa los valores. Nunca subas ese archivo al repositorio.
 
 ## Límites de la fuente
 
-No se intenta ocultar la automatización, resolver CAPTCHA ni eludir controles del portal. Si SERVIR bloquea las consultas automáticas, se debe solicitar acceso o un canal de datos autorizado a la entidad, o importar datos desde una fuente oficial permitida. El flujo conserva los datos que ya existen si una consulta falla, para no dejar el sitio vacío.
+No se intenta resolver CAPTCHA ni eludir controles de los portales. Si una fuente bloquea las consultas automáticas, el flujo conserva los datos que ya existen para no dejar el sitio vacío.

@@ -83,7 +83,7 @@ class ProyectoTests(unittest.TestCase):
             **datos,
             "url_postulacion": "https://entidad.gob.pe/convocatoria",
         })
-        self.assertEqual(con_enlace.count("Postular en la institución"), 1)
+        self.assertEqual(con_enlace.count("Ver oferta y postular"), 1)
         self.assertIn("https://entidad.gob.pe/convocatoria", con_enlace)
 
     def test_distingue_consulta_general_de_postulacion_directa(self):
@@ -97,7 +97,7 @@ class ProyectoTests(unittest.TestCase):
             "url_consulta": "https://share.google/IovzweaQemtlVGF9i",
         }
         pagina = generar_pagina_detalle(oferta)
-        self.assertNotIn("Postular en la institución", pagina)
+        self.assertNotIn("Ver oferta y postular", pagina)
         self.assertIn("Buscar en el portal de la institución", pagina)
         self.assertIn("apps.diresamdd.gob.pe", pagina)
         self.assertIn("798049", pagina)
