@@ -1,6 +1,4 @@
 (() => {
-  const departamento = document.querySelector("#filtro-departamento");
-  const provincia = document.querySelector("#filtro-provincia");
   const distrito = document.querySelector("#filtro-distrito");
   const busqueda = document.querySelector("#buscar-ofertas");
   const orden = document.querySelector("#orden-ofertas");
@@ -14,7 +12,7 @@
   const chips = [...document.querySelectorAll(".district-chip")];
   const claveGuardados = "empleos-canete-guardados";
 
-  if (!departamento || !provincia || !distrito || !busqueda || !orden || !limpiar || !contador || !vacio || !ofertas.length) return;
+  if (!distrito || !busqueda || !orden || !limpiar || !contador || !vacio || !ofertas.length) return;
 
   const normalizar = (texto) =>
     String(texto || "")
@@ -51,25 +49,6 @@
     if (cantidadGuardados) cantidadGuardados.textContent = String(guardados.size);
   };
 
-  const cargarOpciones = (select, valores, textoInicial) => {
-    const anterior = select.value;
-    const opciones = [...new Set(valores.filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
-    const opcionInicial = new Option(textoInicial, "");
-    select.replaceChildren(opcionInicial, ...opciones.map((valor) => new Option(valor, valor)));
-    select.disabled = opciones.length === 0;
-    if (opciones.includes(anterior)) select.value = anterior;
-  };
-
-  const actualizarControles = () => {
-    const seleccionDepartamento = departamento.value;
-    const filasDepartamento = ofertas.filter((oferta) => !seleccionDepartamento || oferta.dataset.departamento === seleccionDepartamento);
-    cargarOpciones(provincia, filasDepartamento.map((oferta) => oferta.dataset.provincia), "Todas las provincias o localidades");
-
-    const seleccionProvincia = provincia.value;
-    const filasProvincia = filasDepartamento.filter((oferta) => !seleccionProvincia || oferta.dataset.provincia === seleccionProvincia);
-    cargarOpciones(distrito, filasProvincia.map((oferta) => oferta.dataset.distrito), "Todos los distritos");
-  };
-
   const ordenarOfertas = () => {
     const campo = orden.value === "empresa" ? "entidad" : "titulo";
     secciones.forEach((seccion) => {
@@ -87,17 +66,10 @@
 
   const filtrar = () => {
     const texto = normalizar(busqueda.value);
-    const seleccion = {
-      departamento: departamento.value,
-      provincia: provincia.value,
-      distrito: distrito.value,
-    };
     let visibles = 0;
 
     ofertas.forEach((oferta) => {
-      const coincideUbicacion = Object.entries(seleccion).every(
-        ([campo, valor]) => !valor || oferta.dataset[campo] === valor,
-      );
+      const coincideUbicacion = !distrito.value || oferta.dataset.distrito === distrito.value;
       const contenido = normalizar(`${oferta.dataset.titulo} ${oferta.dataset.entidad} ${oferta.dataset.distrito}`);
       const coincideTexto = !texto || contenido.includes(texto);
       const coincideGuardado = !soloGuardados || guardados.has(oferta.dataset.id);
@@ -169,17 +141,6 @@
     });
   });
 
-  departamento.addEventListener("change", () => {
-    provincia.value = "";
-    distrito.value = "";
-    actualizarControles();
-    filtrar();
-  });
-  provincia.addEventListener("change", () => {
-    distrito.value = "";
-    actualizarControles();
-    filtrar();
-  });
   distrito.addEventListener("change", filtrar);
   busqueda.addEventListener("input", filtrar);
   orden.addEventListener("change", () => {
@@ -193,8 +154,6 @@
     filtrar();
   });
   limpiar.addEventListener("click", () => {
-    departamento.value = "";
-    provincia.value = "";
     distrito.value = "";
     busqueda.value = "";
     soloGuardados = false;
@@ -202,12 +161,10 @@
       verGuardados.classList.remove("active");
       verGuardados.setAttribute("aria-pressed", "false");
     }
-    actualizarControles();
     filtrar();
     busqueda.focus();
   });
 
-  actualizarControles();
   ordenarOfertas();
   actualizarGuardados();
   filtrar();

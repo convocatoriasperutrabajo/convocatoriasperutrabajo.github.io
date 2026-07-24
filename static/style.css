@@ -84,6 +84,14 @@ a { color: inherit; }
   min-height: 42px;
   padding: 8px;
 }
+.filtro-fijo input[readonly] {
+  appearance: none;
+  background: #f3efe4;
+  border-color: #c9bea4;
+  color: var(--ink);
+  cursor: default;
+  font-weight: 600;
+}
 .search-control input {
   appearance: none;
   border-radius: 6px;
