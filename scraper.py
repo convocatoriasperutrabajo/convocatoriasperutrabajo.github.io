@@ -498,5 +498,5 @@ if __name__ == "__main__":
         ejecutar_scraper(max_paginas=args.max_paginas, headless=not args.visible,
                          max_documentos=args.max_documentos)
     else:
-        from scraper_computrabajo import ejecutar_computrabajo
-        ejecutar_computrabajo(headless=not args.visible)
+        from actualizar_fuentes import ejecutar_fuentes
+        ejecutar_fuentes(headless=not args.visible)

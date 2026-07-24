@@ -61,10 +61,19 @@ def validar() -> None:
 
         url_oficial = str(oferta.get("url_oficial", ""))
         es_computrabajo = str(oferta.get("fuente", "")).casefold() == "computrabajo perú".casefold()
+        es_indeed = str(oferta.get("fuente", "")).casefold() == "indeed perú".casefold()
+        es_linkedin = str(oferta.get("fuente", "")).casefold() == "linkedin"
         host_oficial = (urlparse(url_oficial).hostname or "").lower()
         if es_computrabajo:
             if host_oficial != "pe.computrabajo.com" or "/ofertas-de-trabajo/" not in urlparse(url_oficial).path:
                 errores.append(f"oferta {posicion}: aviso de Computrabajo no individual {url_oficial}")
+        elif es_indeed:
+            partes_indeed = urlparse(url_oficial)
+            if host_oficial != "pe.indeed.com" or partes_indeed.path != "/viewjob" or "jk=" not in partes_indeed.query:
+                errores.append(f"oferta {posicion}: aviso de Indeed no individual {url_oficial}")
+        elif es_linkedin:
+            if host_oficial != "pe.linkedin.com" or not urlparse(url_oficial).path.startswith("/jobs/view/"):
+                errores.append(f"oferta {posicion}: aviso de LinkedIn no individual {url_oficial}")
         elif url_oficial and not es_url_oficial(url_oficial):
             errores.append(f"oferta {posicion}: fuente no oficial {url_oficial}")
 

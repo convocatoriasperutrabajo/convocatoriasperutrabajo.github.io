@@ -12,6 +12,7 @@ import json
 import re
 import html
 from empleo_utils import asegurar_id, nombre_archivo_oferta
+from config_canete import DISTRITOS_CANETE
 from consola import configurar_salida_utf8
 
 configurar_salida_utf8()
@@ -59,7 +60,7 @@ CABECERA = """<!DOCTYPE html>
     <a href="{ruta_css}index.html" class="masthead-mark-link"><span class="masthead-mark">☰</span></a>
     <div class="masthead-text">
       <h1><a href="{ruta_css}index.html">Empleos en Cañete</a></h1>
-      <p class="masthead-sub">Ofertas para Mala, Asia, Chilca y San Vicente de Cañete · enlaces directos al aviso original</p>
+      <p class="masthead-sub">Ofertas de los 16 distritos de Cañete · enlaces directos al aviso original</p>
     </div>
   </div>
 </header>
@@ -89,7 +90,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
         )
     boton_postulacion = (
         f'<a class="btn-oficial" href="{html.escape(url_postulacion, quote=True)}" '
-        'target="_blank" rel="noopener noreferrer">Postular en la institución →</a>'
+        'target="_blank" rel="noopener noreferrer">Ver oferta y postular →</a>'
         if url_postulacion else ""
     )
     aviso_enlace = (
@@ -187,8 +188,9 @@ def generar_pagina_detalle(oferta: dict) -> str:
         <div><dt>Ubicación</dt><dd>{html.escape(oferta['ubicacion'])}</dd></div>
         <div><dt>Remuneración</dt><dd>{html.escape(remuneracion)}</dd></div>
         <div><dt>Referencia</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
+        <div><dt>Fuente</dt><dd>{html.escape(str(oferta.get("fuente", "Aviso original")))}</dd></div>
         {f'<div><dt>Código SERVIR</dt><dd class="mono">N° {html.escape(str(oferta["codigo_servir"]))}</dd></div>' if oferta.get('codigo_servir') else ''}
-        <div><dt>{"Fecha de recopilación" if oferta.get("fuente") == "Computrabajo Perú" else "Vigencia"}</dt><dd>{html.escape(oferta['fecha_inicio']) if oferta.get("fuente") == "Computrabajo Perú" else f"{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}"}</dd></div>
+        <div><dt>{"Fecha de recopilación" if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn"} else "Vigencia"}</dt><dd>{html.escape(oferta['fecha_inicio']) if oferta.get("fuente") in {"Computrabajo Perú", "Indeed Perú", "LinkedIn"} else f"{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}"}</dd></div>
       </dl>
       <div class="guia-postulacion">
         <strong>Antes de postular</strong>
@@ -236,18 +238,9 @@ def generar_index(empleos: list) -> str:
         distritos.add(distrito)
 
     secciones_html = []
-    orden_distritos = {
-        "MALA": 0,
-        "CHILCA": 1,
-        "ASIA": 2,
-        "SAN VICENTE DE CAÑETE": 3,
-    }
-    for nombre_distrito in sorted(
-        por_distrito,
-        key=lambda nombre: (orden_distritos.get(nombre, 99), nombre),
-    ):
+    for nombre_distrito in DISTRITOS_CANETE:
         items = []
-        ofertas_distrito = por_distrito[nombre_distrito]
+        ofertas_distrito = por_distrito.get(nombre_distrito, [])
         for o in sorted(ofertas_distrito, key=lambda x: x["titulo"]):
             archivo = nombre_archivo_oferta(o)
             depto, provincia, distrito = ubicacion_desglosada(o)
@@ -258,7 +251,7 @@ def generar_index(empleos: list) -> str:
                 <li class="job-item" data-id="{html.escape(o['id'], quote=True)}" data-titulo="{html.escape(o['titulo'], quote=True)}" data-entidad="{html.escape(o['entidad'], quote=True)}" data-departamento="{html.escape(depto, quote=True)}" data-provincia="{html.escape(provincia, quote=True)}" data-distrito="{html.escape(distrito, quote=True)}">
                     <a href="ofertas/{archivo}" class="job-link">
                         <span class="job-title">{html.escape(o['titulo'])}</span>
-                        <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s){codigo}</span>
+                        <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s){codigo} <span class="source-badge">{html.escape(str(o.get("fuente", "Fuente original")))}</span></span>
                         {perfil_html}
                     </a>
                     <button type="button" class="favorite-toggle" aria-label="Guardar {html.escape(o['titulo'], quote=True)}" aria-pressed="false" title="Guardar oferta">☆</button>
@@ -271,21 +264,18 @@ def generar_index(empleos: list) -> str:
                 <span class="district-count">{len(ofertas_distrito)} ofertas <span class="toggle-icon" aria-hidden="true">−</span></span>
               </button>
             </h2>
-            <ul class="job-list">{''.join(items)}</ul>
+            <ul class="job-list">{''.join(items) if items else '<li class="district-empty">Todavía no encontramos ofertas en este distrito.</li>'}</ul>
         </section>""")
 
     accesos_distritos = "".join(
         f'<button type="button" class="district-chip" data-distrito="{html.escape(nombre, quote=True)}">'
-        f'{html.escape(nombre.title())}<span>{len(por_distrito[nombre])}</span></button>'
-        for nombre in sorted(
-            por_distrito,
-            key=lambda nombre: (orden_distritos.get(nombre, 99), nombre),
-        )
+        f'{html.escape(nombre.title())}<span>{len(por_distrito.get(nombre, []))}</span></button>'
+        for nombre in DISTRITOS_CANETE
     )
 
     contenido = CABECERA.format(
-        titulo="Empleos en Cañete — Mala, Asia, Chilca y San Vicente",
-        descripcion="Ofertas laborales recientes en Mala, Asia, Chilca y San Vicente de Cañete, con enlace al aviso original.",
+        titulo="Empleos en Cañete — ofertas en sus 16 distritos",
+        descripcion="Ofertas laborales de toda la provincia de Cañete, organizadas por distrito y con enlace al aviso original.",
         ruta_css="",
     ) + f"""
 <main class="layout-index">
@@ -312,7 +302,7 @@ def generar_index(empleos: list) -> str:
     <div class="controles-ubicacion">
       <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento">{opciones_filtro(departamentos, 'Todas las zonas')}</select></div>
       <div class="filtro-control"><label for="filtro-provincia">Provincia o localidad</label><select id="filtro-provincia">{opciones_filtro(provincias, 'Todas las provincias')}</select></div>
-      <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(distritos, 'Todos los distritos')}</select></div>
+      <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(set(DISTRITOS_CANETE), 'Todos los distritos')}</select></div>
     </div>
     <div class="filter-actions">
       <button type="button" class="saved-filter" id="ver-guardados" aria-pressed="false">☆ Ver guardados <span id="cantidad-guardados">0</span></button>

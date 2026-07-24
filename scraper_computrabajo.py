@@ -9,18 +9,14 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from config_canete import BASE_COMPUTRABAJO, ZONAS_COMPUTRABAJO
 from empleo_utils import asegurar_id
 
 
-BASE = "https://pe.computrabajo.com"
+BASE = BASE_COMPUTRABAJO
 ARCHIVO = Path("empleos.json")
-ZONAS = {
-    "Mala": f"{BASE}/empleos-en-lima-en-mala",
-    "Chilca": f"{BASE}/empleos-en-lima-en-chilca",
-    "Asia": f"{BASE}/empleos-en-lima-en-asia",
-    "San Vicente de Cañete": f"{BASE}/empleos-en-lima-en-san-vicente-de-canete",
-}
-LOCALIDADES_ADMITIDAS = ("mala", "chilca", "asia", "san vicente de cañete", "cañete")
+ZONAS = ZONAS_COMPUTRABAJO
+LOCALIDADES_ADMITIDAS = tuple(zona.casefold() for zona in ZONAS) + ("cañete",)
 
 
 def crear_driver(headless: bool = True):
@@ -44,7 +40,7 @@ def limpiar(texto: object) -> str:
     return re.sub(r"\s+", " ", str(texto or "")).strip()
 
 
-def extraer_ofertas_html(html: str, limite: int = 12) -> list[dict]:
+def extraer_ofertas_html(html: str, limite: int = 12, zona: str | None = None) -> list[dict]:
     """Convierte las tarjetas visibles en registros con enlace individual."""
     soup = BeautifulSoup(html, "html.parser")
     hoy = date.today()
@@ -57,8 +53,9 @@ def extraer_ofertas_html(html: str, limite: int = 12) -> list[dict]:
         url = urljoin(BASE, enlace.get("href", "")).split("#", 1)[0]
         titulo = limpiar(enlace.get_text(" ", strip=True))
         textos = [limpiar(p.get_text(" ", strip=True)) for p in tarjeta.select("p")]
+        zonas_validas = (zona.casefold(),) if zona else LOCALIDADES_ADMITIDAS
         ubicacion = next(
-            (texto for texto in textos if "," in texto and any(z in texto.casefold() for z in LOCALIDADES_ADMITIDAS)),
+            (texto for texto in textos if "," in texto and any(z in texto.casefold() for z in zonas_validas)),
             "",
         )
         if not titulo or not ubicacion or url in vistos:
@@ -83,7 +80,7 @@ def extraer_ofertas_html(html: str, limite: int = 12) -> list[dict]:
             "ubicacion": ubicacion,
             "departamento": "LIMA",
             "provincia": "CAÑETE",
-            "distrito": ubicacion.split(",", 1)[0].strip().upper(),
+            "distrito": (zona or ubicacion.split(",", 1)[0].strip()).upper(),
             "numero_convocatoria": f"CT-{referencia}",
             "vacantes": "1",
             "remuneracion": salario,
@@ -111,7 +108,7 @@ def guardar_si_hay_resultados(ofertas: list[dict]) -> None:
     )
 
 
-def ejecutar_computrabajo(headless: bool = True, limite_por_zona: int = 12) -> None:
+def recopilar_computrabajo(headless: bool = True, limite_por_zona: int = 12) -> list[dict]:
     from selenium.webdriver.common.by import By
     from selenium.webdriver.support.ui import WebDriverWait
 
@@ -125,12 +122,17 @@ def ejecutar_computrabajo(headless: bool = True, limite_por_zona: int = 12) -> N
                 lambda d: d.find_elements(By.CSS_SELECTOR, "article")
                 or "robot" in d.page_source.lower()
             )
-            nuevas = extraer_ofertas_html(driver.page_source, limite=limite_por_zona)
+            nuevas = extraer_ofertas_html(driver.page_source, limite=limite_por_zona, zona=zona)
             print(f"  {len(nuevas)} ofertas válidas")
             for oferta in nuevas:
                 recopiladas[oferta["url_oficial"]] = oferta
             time.sleep(1)
     finally:
         driver.quit()
-    guardar_si_hay_resultados(list(recopiladas.values()))
-    print(f"✅ {len(recopiladas)} ofertas locales guardadas")
+    return list(recopiladas.values())
+
+
+def ejecutar_computrabajo(headless: bool = True, limite_por_zona: int = 12) -> None:
+    ofertas = recopilar_computrabajo(headless=headless, limite_por_zona=limite_por_zona)
+    guardar_si_hay_resultados(ofertas)
+    print(f"✅ {len(ofertas)} ofertas locales guardadas")
