@@ -255,18 +255,33 @@ def generar_index(empleos: list) -> str:
             perfil = str(o.get("formacion_academica", "")).strip()
             perfil_html = f'<span class="job-profile">{html.escape(perfil)}</span>' if perfil else ""
             items.append(f"""
-                <li class="job-item" data-departamento="{html.escape(depto, quote=True)}" data-provincia="{html.escape(provincia, quote=True)}" data-distrito="{html.escape(distrito, quote=True)}">
+                <li class="job-item" data-id="{html.escape(o['id'], quote=True)}" data-titulo="{html.escape(o['titulo'], quote=True)}" data-entidad="{html.escape(o['entidad'], quote=True)}" data-departamento="{html.escape(depto, quote=True)}" data-provincia="{html.escape(provincia, quote=True)}" data-distrito="{html.escape(distrito, quote=True)}">
                     <a href="ofertas/{archivo}" class="job-link">
                         <span class="job-title">{html.escape(o['titulo'])}</span>
                         <span class="job-meta">{html.escape(o['entidad'])} · {html.escape(o['vacantes'])} vacante(s){codigo}</span>
                         {perfil_html}
                     </a>
+                    <button type="button" class="favorite-toggle" aria-label="Guardar {html.escape(o['titulo'], quote=True)}" aria-pressed="false" title="Guardar oferta">☆</button>
                 </li>""")
         secciones_html.append(f"""
-        <section class="dep-section">
-            <h2>📍 {html.escape(nombre_distrito)} <span class="district-count">{len(ofertas_distrito)} ofertas</span></h2>
+        <section class="dep-section" data-seccion-distrito="{html.escape(nombre_distrito, quote=True)}">
+            <h2>
+              <button type="button" class="district-heading" aria-expanded="true">
+                <span>📍 {html.escape(nombre_distrito)}</span>
+                <span class="district-count">{len(ofertas_distrito)} ofertas <span class="toggle-icon" aria-hidden="true">−</span></span>
+              </button>
+            </h2>
             <ul class="job-list">{''.join(items)}</ul>
         </section>""")
+
+    accesos_distritos = "".join(
+        f'<button type="button" class="district-chip" data-distrito="{html.escape(nombre, quote=True)}">'
+        f'{html.escape(nombre.title())}<span>{len(por_distrito[nombre])}</span></button>'
+        for nombre in sorted(
+            por_distrito,
+            key=lambda nombre: (orden_distritos.get(nombre, 99), nombre),
+        )
+    )
 
     contenido = CABECERA.format(
         titulo="Empleos en Cañete — Mala, Asia, Chilca y San Vicente",
@@ -276,13 +291,33 @@ def generar_index(empleos: list) -> str:
 <main class="layout-index">
   <section class="buscador-ubicacion" aria-labelledby="titulo-buscador">
     <h2 id="titulo-buscador">Encuentra empleo cerca de ti</h2>
-    <p>Elige tu ubicación. No necesitas saber el nombre de la entidad.</p>
+    <p>Busca por puesto o empresa y elige tu distrito.</p>
+    <div class="search-row">
+      <div class="filtro-control search-control">
+        <label for="buscar-ofertas">Buscar empleo</label>
+        <input type="search" id="buscar-ofertas" placeholder="Ejemplo: operario, ventas, banco…" autocomplete="off">
+      </div>
+      <div class="filtro-control sort-control">
+        <label for="orden-ofertas">Ordenar resultados</label>
+        <select id="orden-ofertas">
+          <option value="titulo">Puesto: A–Z</option>
+          <option value="empresa">Empresa: A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="district-chips" aria-label="Accesos rápidos por distrito">
+      <button type="button" class="district-chip active" data-distrito="">Todos <span>{len(empleos)}</span></button>
+      {accesos_distritos}
+    </div>
     <div class="controles-ubicacion">
       <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento">{opciones_filtro(departamentos, 'Todas las zonas')}</select></div>
       <div class="filtro-control"><label for="filtro-provincia">Provincia o localidad</label><select id="filtro-provincia">{opciones_filtro(provincias, 'Todas las provincias')}</select></div>
       <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(distritos, 'Todos los distritos')}</select></div>
     </div>
-    <button type="button" class="limpiar-filtros" id="limpiar-filtros">Ver todas las ofertas</button>
+    <div class="filter-actions">
+      <button type="button" class="saved-filter" id="ver-guardados" aria-pressed="false">☆ Ver guardados <span id="cantidad-guardados">0</span></button>
+      <button type="button" class="limpiar-filtros" id="limpiar-filtros">Limpiar búsqueda</button>
+    </div>
   </section>
   <p class="total-ofertas" id="contador-resultados" aria-live="polite">{len(empleos)} ofertas registradas actualmente.</p>
   {''.join(secciones_html) if secciones_html else '<p class="empty-state">Todavía no hay ofertas cargadas. Corre scraper.py primero.</p>'}
