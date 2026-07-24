@@ -2,10 +2,27 @@
 import hashlib
 import re
 import unicodedata
+from urllib.parse import urlparse
 
 
 FUENTE_OFICIAL = "SERVIR - Talento Perú"
 URL_OFICIAL_SERVIR = "https://app.servir.gob.pe/DifusionOfertasExterno/faces/consultas/ofertas_laborales.xhtml"
+
+
+def es_enlace_postulacion_directo(url: str) -> bool:
+    """Descarta portadas, listados generales y enlaces acortados."""
+    partes = urlparse(str(url or "").strip())
+    host = (partes.hostname or "").lower()
+    ruta = partes.path.rstrip("/")
+    if partes.scheme not in {"http", "https"} or not host:
+        return False
+    if host == "share.google":
+        return False
+    if host == "unajma.edu.pe" and ruta == "/convocatoria-personal":
+        return False
+    if host == "www.gob.pe" and ruta == "/muniandresavelinocaceresdorregaray":
+        return False
+    return True
 
 
 def texto_clave(valor: object) -> str:

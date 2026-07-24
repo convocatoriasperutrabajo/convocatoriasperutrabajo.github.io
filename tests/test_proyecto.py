@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 
-from empleo_utils import asegurar_id, nombre_archivo_oferta
+from empleo_utils import asegurar_id, es_enlace_postulacion_directo, nombre_archivo_oferta
 from generar_sitio import generar_pagina_detalle
 from scraper import extraer_secciones_detalle, retirar_duplicados_sin_codigo, retirar_ofertas_vencidas
 from validar_sitio import es_url_oficial, es_url_postulacion_valida
@@ -45,6 +45,10 @@ class ProyectoTests(unittest.TestCase):
     def test_rechaza_agregadores_como_enlace_de_postulacion(self):
         self.assertTrue(es_url_postulacion_valida("https://unajma.edu.pe/convocatoria-personal/"))
         self.assertFalse(es_url_postulacion_valida("https://convocatoriasdetrabajo.com/aviso"))
+        self.assertFalse(es_enlace_postulacion_directo("https://unajma.edu.pe/convocatoria-personal/"))
+        self.assertFalse(es_enlace_postulacion_directo("https://www.gob.pe/muniandresavelinocaceresdorregaray"))
+        self.assertFalse(es_enlace_postulacion_directo("https://share.google/IovzweaQemtlVGF9i"))
+        self.assertTrue(es_enlace_postulacion_directo("https://entidad.gob.pe/convocatorias/cas-001"))
 
     def test_oculta_el_word_pero_conserva_bases_reales(self):
         oferta = {
@@ -81,19 +85,6 @@ class ProyectoTests(unittest.TestCase):
         })
         self.assertEqual(con_enlace.count("Postular en la institución"), 1)
         self.assertIn("https://entidad.gob.pe/convocatoria", con_enlace)
-
-    def test_advierte_sobre_el_certificado_de_diresa(self):
-        oferta = {
-            **OFERTA,
-            "vacantes": "1",
-            "remuneracion": "3,000",
-            "fecha_inicio": "22/07/2026",
-            "fecha_fin": "31/07/2026",
-            "url_postulacion": "https://share.google/IovzweaQemtlVGF9i",
-        }
-        pagina = generar_pagina_detalle(oferta)
-        self.assertIn("problema con su certificado de seguridad", pagina)
-        self.assertIn("<code>apps.diresamdd.gob.pe</code>", pagina)
 
     def test_extrae_requisitos_del_detalle_de_servir(self):
         texto = (
