@@ -31,6 +31,8 @@ def cargar_empleos():
 
 def mostrar_remuneracion(valor: str) -> str:
     valor = str(valor or "").strip()
+    if not valor or valor.casefold() == "no especificado":
+        return "No especificado"
     return valor if valor.upper().startswith("S/.") else f"S/. {valor}"
 
 
@@ -56,8 +58,8 @@ CABECERA = """<!DOCTYPE html>
   <div class="masthead-inner">
     <a href="{ruta_css}index.html" class="masthead-mark-link"><span class="masthead-mark">☰</span></a>
     <div class="masthead-text">
-      <h1><a href="{ruta_css}index.html">Bolsa de Empleo Público — Perú</a></h1>
-      <p class="masthead-sub">Recopilado automáticamente del portal oficial de SERVIR (Talento Perú) · no es un sitio del Estado</p>
+      <h1><a href="{ruta_css}index.html">Empleos en Cañete</a></h1>
+      <p class="masthead-sub">Ofertas para Mala, Asia, Chilca y San Vicente de Cañete · enlaces directos al aviso original</p>
     </div>
   </div>
 </header>
@@ -65,8 +67,7 @@ CABECERA = """<!DOCTYPE html>
 
 PIE = """
 <footer class="colophon">
-  <p>Los datos de esta página provienen del <a href="{fuente}" target="_blank" rel="noopener">portal oficial de SERVIR — Talento Perú</a>.
-  Este es un sitio de difusión independiente y no oficial; verifica siempre los detalles y postula directamente en el portal del Estado.</p>
+  <p>Sitio independiente de difusión. Verifica siempre la vigencia y las condiciones en la página original antes de postular.</p>
 </footer>
 </body>
 </html>
@@ -149,7 +150,7 @@ def generar_pagina_detalle(oferta: dict) -> str:
         f'<ul class="lista-documentos">{"".join(documentos)}</ul></section>'
         if documentos else
         '<section class="documentos" id="documentos"><h2>Bases, anexos y documentos oficiales</h2>'
-        '<p>La fuente oficial no entregó un archivo de bases para esta oferta. Revisa los canales oficiales de la institución antes de postular.</p></section>'
+        '<p>Revisa todos los requisitos y condiciones en el aviso original antes de postular.</p></section>'
     )
     pasos_html = f"""
   <section class="pasos-postulacion" id="como-postular">
@@ -185,13 +186,13 @@ def generar_pagina_detalle(oferta: dict) -> str:
       <dl class="notice-facts">
         <div><dt>Ubicación</dt><dd>{html.escape(oferta['ubicacion'])}</dd></div>
         <div><dt>Remuneración</dt><dd>{html.escape(remuneracion)}</dd></div>
-        <div><dt>Número de convocatoria</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
+        <div><dt>Referencia</dt><dd class="mono">{html.escape(oferta['numero_convocatoria'])}</dd></div>
         {f'<div><dt>Código SERVIR</dt><dd class="mono">N° {html.escape(str(oferta["codigo_servir"]))}</dd></div>' if oferta.get('codigo_servir') else ''}
-        <div><dt>Vigencia</dt><dd>{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}</dd></div>
+        <div><dt>{"Fecha de recopilación" if oferta.get("fuente") == "Computrabajo Perú" else "Vigencia"}</dt><dd>{html.escape(oferta['fecha_inicio']) if oferta.get("fuente") == "Computrabajo Perú" else f"{html.escape(oferta['fecha_inicio'])} — {html.escape(oferta['fecha_fin'])}"}</dd></div>
       </dl>
       <div class="guia-postulacion">
         <strong>Antes de postular</strong>
-        <span class="numero-destacado">Convocatoria: {html.escape(oferta['numero_convocatoria'])}</span>
+        <span class="numero-destacado">Referencia: {html.escape(oferta['numero_convocatoria'])}</span>
         {f'<span class="codigo-servir">Código SERVIR: N° {html.escape(str(oferta["codigo_servir"]))}</span>' if oferta.get('codigo_servir') else ''}
         <p>{aviso_enlace}</p>
       </div>
@@ -257,8 +258,8 @@ def generar_index(empleos: list) -> str:
         </section>""")
 
     contenido = CABECERA.format(
-        titulo="Bolsa de Empleo Público — Perú (fuente: SERVIR)",
-        descripcion="Convocatorias laborales del sector público peruano, recopiladas automáticamente del portal oficial de SERVIR.",
+        titulo="Empleos en Cañete — Mala, Asia, Chilca y San Vicente",
+        descripcion="Ofertas laborales recientes en Mala, Asia, Chilca y San Vicente de Cañete, con enlace al aviso original.",
         ruta_css="",
     ) + f"""
 <main class="layout-index">
@@ -266,7 +267,7 @@ def generar_index(empleos: list) -> str:
     <h2 id="titulo-buscador">Encuentra empleo cerca de ti</h2>
     <p>Elige tu ubicación. No necesitas saber el nombre de la entidad.</p>
     <div class="controles-ubicacion">
-      <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento">{opciones_filtro(departamentos, 'Todo el Perú')}</select></div>
+      <div class="filtro-control"><label for="filtro-departamento">Departamento</label><select id="filtro-departamento">{opciones_filtro(departamentos, 'Todas las zonas')}</select></div>
       <div class="filtro-control"><label for="filtro-provincia">Provincia o localidad</label><select id="filtro-provincia">{opciones_filtro(provincias, 'Todas las provincias')}</select></div>
       <div class="filtro-control"><label for="filtro-distrito">Distrito</label><select id="filtro-distrito">{opciones_filtro(distritos, 'Todos los distritos')}</select></div>
     </div>

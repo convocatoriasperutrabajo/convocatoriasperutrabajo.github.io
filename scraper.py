@@ -478,9 +478,11 @@ def ejecutar_scraper(max_paginas: int = None, headless: bool = True, pausa_segun
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Scraper de Talento Perú (SERVIR)")
+    parser = argparse.ArgumentParser(description="Actualizador de ofertas laborales")
     parser.add_argument("--max-paginas", type=int, default=None)
     parser.add_argument("--visible", action="store_true")
+    parser.add_argument("--servir", action="store_true",
+                        help="usa excepcionalmente la fuente anterior de SERVIR")
     parser.add_argument("--max-documentos", type=int, default=0,
                         help="máximo de Word oficiales a bajar por ejecución (0 = ninguno)")
     parser.add_argument("--normalizar-documentos", action="store_true",
@@ -492,6 +494,9 @@ if __name__ == "__main__":
         corregidos = normalizar_documentos_existentes(empleos)
         guardar_empleos(empleos)
         print(f"Extensiones de Word corregidas: {corregidos}")
-    else:
+    elif args.servir:
         ejecutar_scraper(max_paginas=args.max_paginas, headless=not args.visible,
                          max_documentos=args.max_documentos)
+    else:
+        from scraper_computrabajo import ejecutar_computrabajo
+        ejecutar_computrabajo(headless=not args.visible)

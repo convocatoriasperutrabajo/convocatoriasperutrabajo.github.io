@@ -1,6 +1,6 @@
-# Convocatorias de Trabajo
+# Empleos en Cañete
 
-Sitio estático que difunde únicamente convocatorias obtenidas del portal oficial Talento Perú (SERVIR). No consume avisos de bolsas de trabajo ni de páginas agregadoras. Cada ficha muestra requisitos legibles, documentos oficiales disponibles y un botón separado para postular directamente en la institución.
+Sitio estático que reúne ofertas recientes de Computrabajo para Mala, Asia, Chilca y San Vicente de Cañete. Publica información resumida y dirige siempre al aviso individual original.
 
 ## Actualización automática
 
